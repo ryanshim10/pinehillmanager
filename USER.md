@@ -5,8 +5,8 @@
 - **Name:** Ryan
 - **What to call them:** ryan
 - **Pronouns:** *(optional)*
-- **Timezone:** 
-- **Notes:** 
+- **Timezone:** Asia/Seoul (KST)
+- **Notes:** Prefers Korean (한국어) OK.
 
 ## Context
 
