@@ -15,3 +15,4 @@
 - upbit-grid/ README, requirements, .env.example 작성
 - bot 모듈(config/db/upbit_client/strategy/runner) 1차 구현
 - FastAPI 웹앱(로그인/대시보드/상태 API) 1차 구현 realize
+- gitignore 추가 및 실수로 생성된 .venv 트래킹 제거 예정
