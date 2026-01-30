@@ -1,2 +1,17 @@
 2026-01-30
 - 규칙 추가: (1) 유상 결제 금지, (2) 작업 기록을 채팅+로그 파일로 남기기
+2026-01-30
+- 요청: 전화 발신 가능 여부 문의(불가 안내).
+- TTS 음성 파일 생성/제공: '안녕하세요. 저는 ICT추진팀 심경민 책임의 AI 루카스입니다.'
+- TTS 생성: '안녕하세요. 저는 ICT추진팀 심경민 책임 AI 루카스에요.'
+- Telegram로 TTS mp3 파일 전송: /tmp/tts-ZT9UgI/voice-1769779387767.mp3
+- Telegram로 TTS를 voice note(asVoice)로 재전송: /tmp/tts-ZT9UgI/voice-1769779387767.mp3
+- 사용자 피드백(‘잇드ai’로 들림) 반영: ICT→아이씨티, AI→에이아이로 TTS 재생성 및 voice note 전송
+- 사용자 발음 수정 요청(ICT/AI). TTS 재생성 시도 4회: 생성 파일이 0바이트로 실패(도구 오류 추정). 사용자에게 안내 예정.
+- TTS 재시도(문장 수정) 실패: 생성 mp3 0바이트. 텍스트='안녕하세요. 저는 아이씨티 추진팀의 에이아이, 루카스입니다.'
+- 사용자 선택: TTS(아이씨티/에이아이 문장) 복구 기다림(1번).
+- 질문: 그리드 투자(grid trading vs 전력망 투자) 설명 요청.
+- 프로젝트 스캐폴딩 생성: upbit-grid/ (리눅스 그리드봇 + 웹앱)
+- upbit-grid/ README, requirements, .env.example 작성
+- bot 모듈(config/db/upbit_client/strategy/runner) 1차 구현
+- FastAPI 웹앱(로그인/대시보드/상태 API) 1차 구현 realize

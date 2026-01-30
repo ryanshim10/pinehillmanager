@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Upbit Grid Dashboard</title>
+  <style>
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto;margin:0;background:#fafafa;}
+    header{position:sticky;top:0;background:#fff;border-bottom:1px solid #eee;padding:12px 16px;display:flex;gap:12px;align-items:center;justify-content:space-between;}
+    .wrap{max-width:920px;margin:0 auto;padding:16px;}
+    .grid{display:grid;grid-template-columns:1fr;gap:12px;}
+    @media(min-width:840px){.grid{grid-template-columns:1fr 1fr;}}
+    .card{background:#fff;border:1px solid #eee;border-radius:12px;padding:14px;}
+    button{padding:10px 12px;border-radius:10px;border:1px solid #ddd;background:#111;color:#fff;}
+    button.secondary{background:#fff;color:#111;}
+    input{padding:10px 12px;border:1px solid #ddd;border-radius:10px;width:100%;}
+    table{width:100%;border-collapse:collapse;font-size:13px;}
+    th,td{padding:8px;border-bottom:1px solid #f0f0f0;text-align:left;}
+    .muted{color:#666;}
+    .pill{display:inline-block;padding:4px 8px;border-radius:999px;background:#f2f2f2;font-size:12px;}
+  </style>
+</head>
+<body>
+<header>
+  <div><strong>Upbit Grid</strong> <span class="muted">(mobile)</span></div>
+  <form method="post" action="/logout"><button class="secondary" type="submit">Logout</button></form>
+</header>
+
+<div class="wrap">
+  <div class="grid">
+
+    <div class="card">
+      <h3 style="margin:0 0 8px;">상태</h3>
+      <div class="muted">마켓: {{ settings.market }} / DRY_RUN: {{ settings.dry_run }}</div>
+      <div style="margin-top:10px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+        <span class="pill">enabled: {{ state.enabled if state else 'None' }}</span>
+        <span class="pill">first_entry: {{ '%.0f' % state.first_entry_price if state and state.first_entry_price else '-' }}</span>
+        <span class="pill">bought: {{ state.slices_bought if state else 0 }} / {{ settings.slices }}</span>
+      </div>
+
+      <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;">
+        <button onclick="toggleBot(true)">Start</button>
+        <button class="secondary" onclick="toggleBot(false)">Stop</button>
+      </div>
+
+      <div style="margin-top:12px;">
+        <label class="muted">첫 진입가(앵커) 수동 설정</label>
+        <input id="anchor" inputmode="decimal" placeholder="예: 55000000" />
+        <div style="margin-top:8px;"><button class="secondary" onclick="setAnchor()">Set anchor</button></div>
+      </div>
+
+      <p class="muted" style="margin-top:10px;font-size:13px;">봇 프로세스(bot/runner)가 별도로 떠 있어야 실제로 매매 로직이 돌아갑니다.</p>
+    </div>
+
+    <div class="card">
+      <h3 style="margin:0 0 8px;">최근 Lot (최대 50)</h3>
+      <table>
+        <thead><tr><th>ID</th><th>BUY</th><th>QTY</th><th>TP</th><th>Status</th></tr></thead>
+        <tbody>
+        {% for l in lots %}
+          <tr>
+            <td>{{ l.id }}</td>
+            <td>{{ '%.0f' % l.buy_price }}</td>
+            <td>{{ '%.6f' % l.buy_qty }}</td>
+            <td>{{ '%.0f' % l.sell_target_price }}</td>
+            <td>{{ l.status }}</td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+<script>
+async function toggleBot(on){
+  await fetch('/api/state', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({enabled:on})});
+  location.reload();
+}
+async function setAnchor(){
+  const v = document.getElementById('anchor').value;
+  if(!v) return;
+  await fetch('/api/state', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({first_entry_price: Number(v)})});
+  location.reload();
+}
+</script>
+</body>
+</html>
