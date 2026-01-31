@@ -27,22 +27,31 @@
 - unitId: string (예: PINE-201)
 - roomNo: int (예: 201)
 - floor: int (예: 2)
-- status: enum (임대중|정비중|소송|공실|기타)
+- status: enum (임대중|정비중|소송|공실|정비중|기타)
 - roomType: string? (예: 1.5룸, 투룸)
 - size: string? (면적/평형 등 자유)
 - targetPrice: string? (예: 500-50, 500-60)
 - createdAt, updatedAt
 
 ### Tenant (세입자)
-- tenantId
+- tenantKey: string (예: 이름_전화번호)
+- name
 - phone
-- name? (선택)
+
+### Tenancy (입주/거주 이력)
+- tenancyId: string (예: unitId + startDate + tenantKey)
 - unitId(FK)
+- tenantKey(FK)
+- startDate
+- endDate
+- deposit
+- monthlyRent
+- active: bool
+- createdAt, updatedAt
 
 ### Contract
 - contractId
-- unitId(FK)
-- tenantId(FK)
+- tenancyId(FK)
 - deposit
 - monthlyRent
 - startDate
@@ -53,15 +62,27 @@
 - contractImagePath (원본)
 - createdAt, updatedAt
 
-### Payment
+### Payment (입금/월세)
 - paymentId
-- unitId(FK)
-- tenantId(FK, optional)
+- tenancyId(FK, optional)  # 미확정이면 null
 - paidAt
 - amount
+- senderName? (문자에 있으면)
 - source: enum(SMS|MANUAL)
+- month: YYYY-MM (청구월)
+- status: enum(완납|부분납|미납|확인필요)  # 기본은 자동 판정, 사용자가 수정 가능
 - rawSmsHash/preview (민감정보 최소 저장)
 - matched: bool
+
+### Expense (출금/지출)
+- expenseId
+- spentAt
+- amount
+- category (기본: 공용지출)
+- memo
+- source: enum(SMS|MANUAL)
+- month: YYYY-MM
+- createdAt, updatedAt
 
 ---
 
