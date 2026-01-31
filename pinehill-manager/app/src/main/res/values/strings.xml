@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">파인힐 매니저</string>
+    <string name="units_title">세대 현황</string>
+    <string name="payments_title">입금 관리</string>
+    <string name="expenses_title">지출 관리</string>
+    <string name="messages_title">메시지</string>
+    <string name="status_rented">임대중</string>
+    <string name="status_vacant">공실</string>
+    <string name="status_maintenance">정비중</string>
+    <string name="status_lawsuit">소송</string>
+    <string name="payment_paid">완납</string>
+    <string name="payment_partial">부분납</string>
+    <string name="payment_unpaid">미납</string>
+    <string name="payment_pending">확인필요</string>
+</resources>
