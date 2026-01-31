@@ -16,3 +16,10 @@
 - bot 모듈(config/db/upbit_client/strategy/runner) 1차 구현
 - FastAPI 웹앱(로그인/대시보드/상태 API) 1차 구현 realize
 - gitignore 추가 및 실수로 생성된 .venv 트래킹 제거 예정
+- 보안: 사용자가 sudo 비밀번호를 채팅에 공유함. Telegram 메시지 삭제 조치 요청/실행. 비밀번호 변경 및 로그아웃 권고.
+- 사용자: 'Go go'로 진행 요청. sudo 비번 공유 사건 이후: 비번 변경 재권고, 설치 명령 안내 예정.
+- 사용자: python3-venv 설치 완료 주장. 다음: 확인 커맨드/출력 요청 후 upbit-grid 설치/실행 가이드.
+- 요청: upbit-grid를 systemd 서비스로 등록하는 방법 안내(직접 sudo 불가).
+- 사용자: pip install -r requirements.txt 에러. 직접 실행 불가 안내, 에러 로그 요청 및 해결 커맨드 제시 예정.
+2026-01-31
+- Ryan: 란향(의왕) 2/6 18:00 4명 심경민 예약 메시지 작성/전송. Ryan said it's done.
