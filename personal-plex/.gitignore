@@ -1,0 +1,18 @@
+# 데이터 및 환경 파일 (Git 제외)
+data/
+.env
+*.db
+*.log
+
+# Docker
+.docker/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db

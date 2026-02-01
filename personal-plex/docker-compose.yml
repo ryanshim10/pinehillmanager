@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+  ollama:
+    image: ollama/ollama:latest
+    container_name: personal-plex-ollama
+    volumes:
+      - ./data/ollama:/root/.ollama
+    ports:
+      - "11434:11434"
+    environment:
+      - OLLAMA_KEEP_ALIVE=24h
+    # GPU 사용 가능하면 uncomment:
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: 1
+    #           capabilities: [gpu]
+    restart: unless-stopped
+    networks:
+      - plex-network
+
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:ollama
+    container_name: personal-plex-webui
+    volumes:
+      - ./data/open-webui:/app/backend/data
+    ports:
+      - "3000:8080"
+    environment:
+      - OLLAMA_BASE_URL=http://ollama:11434
+      - WEBUI_AUTH=false
+      - DEFAULT_MODEL=llama3.1:8b
+      - DEFAULT_LOCALE=ko-KR
+    depends_on:
+      - ollama
+    restart: unless-stopped
+    networks:
+      - plex-network
+
+  pinehill-bridge:
+    build:
+      context: ./config
+      dockerfile: Dockerfile.bridge
+    container_name: personal-plex-bridge
+    ports:
+      - "8001:8000"
+    volumes:
+      - ./data:/data
+    environment:
+      - DATABASE_URL=/data/pinehill.db
+      - GOOGLE_SHEET_URL=${GOOGLE_SHEET_URL:-}
+    restart: unless-stopped
+    networks:
+      - plex-network
+
+networks:
+  plex-network:
+    driver: bridge
