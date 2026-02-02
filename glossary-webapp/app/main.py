@@ -137,8 +137,7 @@ def build_prompt(term: str) -> str:
         "  \"oneLine\": \"1~2문장\",\n"
         "  \"example\": \"제조 현장 예시 1개\",\n"
         "  \"kpi\": [\"OEE\",\"불량률\",\"리드타임\",\"OTD\",\"원가\",\"에너지\"],\n"
-        "  \"confusions\": [\"유사 용어 1~3개\"],\n"
-        "  \"ask\": [\"임원이 물어볼 질문 2개\"]\n"
+        "  \"confusions\": [\"유사 용어 1~3개\"]\n"
         "}\n"
     )
 
@@ -234,7 +233,6 @@ def llm_generate(term: str) -> Dict[str, Any]:
     obj.setdefault("example", "")
     obj.setdefault("kpi", [])
     obj.setdefault("confusions", [])
-    obj.setdefault("ask", [])
     return obj
 
 
@@ -291,7 +289,6 @@ def api_export_xlsx():
         "예시",
         "KPI",
         "혼동되는 용어",
-        "현업 질문(체크리스트)",
         "출처",
     ]
     ws.append(headers)
@@ -312,7 +309,6 @@ def api_export_xlsx():
                 it.get("example", ""),
                 ", ".join(it.get("kpi") or []),
                 ", ".join(it.get("confusions") or []),
-                "\n".join(it.get("ask") or []),
                 src,
             ]
         )
@@ -323,7 +319,7 @@ def api_export_xlsx():
             cell.alignment = Alignment(vertical="top", wrap_text=True)
 
     # column widths (rough)
-    widths = [22, 22, 12, 70, 60, 25, 30, 55, 10]
+    widths = [22, 22, 12, 70, 60, 25, 30, 10]
     for i, w in enumerate(widths, start=1):
         ws.column_dimensions[chr(64 + i)].width = w
 
@@ -349,7 +345,7 @@ async def api_upload_xlsx(file: UploadFile = File(...), fillMissing: str = Form(
 
     Expected headers (row 1) - either Korean or keys:
       용어(KR)|kr, 약어/EN|en, 분류|category, 한줄 정의|oneLine, 예시|example,
-      KPI|kpi, 혼동되는 용어|confusions, 현업 질문(체크리스트)|ask
+      KPI|kpi, 혼동되는 용어|confusions
     """
 
     if not file.filename or not file.filename.lower().endswith(".xlsx"):
@@ -372,7 +368,6 @@ async def api_upload_xlsx(file: UploadFile = File(...), fillMissing: str = Form(
         "example": ["예시", "example"],
         "kpi": ["KPI", "kpi"],
         "confusions": ["혼동되는 용어", "confusions"],
-        "ask": ["현업 질문(체크리스트)", "임원 질문", "ask"],
     }
 
     for i, h in enumerate(header_row):
@@ -415,8 +410,7 @@ async def api_upload_xlsx(file: UploadFile = File(...), fillMissing: str = Form(
                 "example": str(row[col_map["example"]].value).strip() if ("example" in col_map and row[col_map["example"]].value is not None) else "",
                 "kpi": _split_list(row[col_map["kpi"]].value) if "kpi" in col_map else [],
                 "confusions": _split_list(row[col_map["confusions"]].value) if "confusions" in col_map else [],
-                "ask": _split_list(row[col_map["ask"]].value) if "ask" in col_map else [],
-            }
+                    }
 
             # normalize category if empty
             if not entry.get("category"):
@@ -431,14 +425,12 @@ async def api_upload_xlsx(file: UploadFile = File(...), fillMissing: str = Form(
                     not entry.get("example"),
                     not entry.get("kpi"),
                     not entry.get("confusions"),
-                    not entry.get("ask"),
                 ])
                 if needs:
                     gen = llm_generate(kr)
                     # ensure list shapes
                     gen["kpi"] = _split_list(gen.get("kpi"))
                     gen["confusions"] = _split_list(gen.get("confusions"))
-                    gen["ask"] = _split_list(gen.get("ask"))
                     _merge_keep_existing(entry, gen)
                     report["filledByLLM"] += 1
 
@@ -479,7 +471,6 @@ def api_save(payload: Dict[str, Any] = Body(...)):
         "example": (payload.get("example") or "").strip(),
         "kpi": _split_list(payload.get("kpi")),
         "confusions": _split_list(payload.get("confusions")),
-        "ask": _split_list(payload.get("ask")),
         "createdBy": (payload.get("createdBy") or "USER").strip() or "USER",
     }
     if not item["category"]:

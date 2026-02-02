@@ -26,7 +26,6 @@ const rows = entries.map(e => ({
   example: e.example || '',
   kpi: Array.isArray(e.kpi) ? e.kpi.join(', ') : '',
   confusions: Array.isArray(e.confusions) ? e.confusions.join(', ') : '',
-  ask: Array.isArray(e.ask) ? e.ask.join('\n') : '',
 }));
 
 const wb = new ExcelJS.Workbook();
@@ -43,7 +42,6 @@ ws.columns = [
   { header: '예시', key: 'example', width: 60 },
   { header: 'KPI', key: 'kpi', width: 25 },
   { header: '혼동되는 용어', key: 'confusions', width: 30 },
-  { header: '현업 질문(체크리스트)', key: 'ask', width: 55 },
 ];
 
 ws.addRows(rows);
