@@ -26,8 +26,22 @@ header{
   padding-top:14px;
   margin-bottom:14px;
 }
+
+.brand{display:flex;gap:14px;align-items:center}
+.brandLogo{
+  width:140px;
+  height:auto;
+  border-radius:10px;
+  border:1px solid var(--border);
+  background:#fff;
+  padding:10px;
+}
+.brandText{flex:1}
 header h1{margin:0 0 6px 0;font-size:28px;letter-spacing:-0.2px}
 .sub{margin:0;color:var(--muted)}
+
+/* red accent line under header */
+header:after{content:"";display:block;height:3px;width:72px;background:var(--wia-red);border-radius:999px;margin-top:10px}
 
 .search,.uploadRow{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
 .search{margin:16px 0 10px}
@@ -57,6 +71,21 @@ button.secondary{
   border-color:var(--border);
 }
 button.secondary:hover{border-color:var(--wia-blue)}
+
+/* red accents */
+button.accent{
+  background: var(--wia-red);
+  border-color: var(--wia-red);
+  color:#fff;
+}
+button.accent:hover{filter:brightness(1.03)}
+button.accentOutline{
+  background:#fff;
+  color:var(--wia-red);
+  border-color: rgba(255,0,0,.35);
+}
+button.accentOutline:hover{border-color: var(--wia-red)}
+
 button:hover{filter:brightness(1.02)}
 button:disabled{opacity:.5;cursor:not-allowed}
 

@@ -9,8 +9,13 @@
 <body>
   <div class="container">
     <header>
-      <h1>제조 AI/DX 용어집</h1>
-      <p class="sub">HYUNDAI WIA CI 톤(Blue/Red) 기반 UI · 검색/필터/업로드/엑셀</p>
+      <div class="brand">
+        <img class="brandLogo" src="/static/hyundai-wia-logo.jpg" alt="HYUNDAI WIA" />
+        <div class="brandText">
+          <h1>제조 AI/DX 용어집</h1>
+          <p class="sub">HYUNDAI WIA CI 톤(Blue/Red) 기반 UI · 검색/필터/업로드/엑셀</p>
+        </div>
+      </div>
     </header>
 
     <section class="search">
@@ -22,7 +27,7 @@
 
       <button id="btnSearch">검색</button>
       <button id="btnExport" class="secondary">엑셀 다운로드</button>
-      <button id="btnDraft" class="secondary" {{ 'disabled' if not llm_enabled else '' }}>
+      <button id="btnDraft" class="accent" {{ 'disabled' if not llm_enabled else '' }}>
         없음 → 초안 생성
       </button>
 
@@ -39,7 +44,7 @@
     <section class="upload">
       <div class="uploadRow">
         <input id="uploadFile" type="file" accept=".xlsx" />
-        <button id="btnUpload" class="secondary">일괄 업로드(xlsx)</button>
+        <button id="btnUpload" class="secondary accentOutline">일괄 업로드(xlsx)</button>
         {% if llm_enabled %}
         <label class="toggle">
           <input type="checkbox" id="fillMissing" checked />
