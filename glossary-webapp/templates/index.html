@@ -15,6 +15,11 @@
 
     <section class="search">
       <input id="q" placeholder="예: RAG, OEE, MES, 예지보전" autocomplete="off" />
+
+      <select id="category">
+        <option value="">전체 카테고리</option>
+      </select>
+
       <button id="btnSearch">검색</button>
       <button id="btnExport" class="secondary">엑셀 다운로드</button>
       <button id="btnDraft" class="secondary" {{ 'disabled' if not llm_enabled else '' }}>
@@ -29,6 +34,25 @@
       {% else %}
       <div class="hint">LLM 초안 생성은 현재 비활성화(LLM_MODE=off) 상태입니다.</div>
       {% endif %}
+    </section>
+
+    <section class="upload">
+      <div class="uploadRow">
+        <input id="uploadFile" type="file" accept=".xlsx" />
+        <button id="btnUpload" class="secondary">일괄 업로드(xlsx)</button>
+        {% if llm_enabled %}
+        <label class="toggle">
+          <input type="checkbox" id="fillMissing" checked />
+          빈 칸은 LLM이 채우기
+        </label>
+        {% else %}
+        <label class="toggle">
+          <input type="checkbox" id="fillMissing" disabled />
+          빈 칸 자동 채우기(LLM 비활성)
+        </label>
+        {% endif %}
+      </div>
+      <div class="hint">엑셀 1행은 헤더. 최소 "용어(KR)" 컬럼이 필요해.</div>
     </section>
 
     <section class="results">
@@ -47,11 +71,24 @@ function escapeHtml(s){
   return (s||'').replace(/[&<>"']/g, (c)=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 
+async function loadCategories(){
+  const res = await fetch('/api/categories');
+  const data = await res.json();
+  const sel = $('category');
+  (data.categories||[]).forEach(c=>{
+    const opt = document.createElement('option');
+    opt.value = c;
+    opt.textContent = c;
+    sel.appendChild(opt);
+  });
+}
+
 async function search(){
   const q = $('q').value.trim();
-  if(!q){ $('results').innerHTML = '<div class="muted">검색어를 입력해줘.</div>'; return; }
+  const category = $('category').value;
+  if(!q && !category){ $('results').innerHTML = '<div class="muted">검색어 또는 카테고리를 선택해줘.</div>'; return; }
   $('detail').innerHTML = '';
-  const res = await fetch('/api/search?q='+encodeURIComponent(q));
+  const res = await fetch('/api/search?q='+encodeURIComponent(q)+'&category='+encodeURIComponent(category));
   const data = await res.json();
   if(!data.results || data.results.length===0){
     $('results').innerHTML = '<div class="muted">일치 항목 없음.</div>';
@@ -106,11 +143,43 @@ async function draft(){
   loadTerm(data.item.kr);
 }
 
+async function uploadXlsx(){
+  const f = $('uploadFile').files && $('uploadFile').files[0];
+  if(!f){ $('results').innerHTML = '<div class="muted">업로드할 .xlsx 파일을 선택해줘.</div>'; return; }
+
+  $('results').innerHTML = '<div class="muted">업로드/처리 중…</div>';
+  const form = new FormData();
+  form.append('file', f);
+  const fill = $('fillMissing');
+  form.append('fillMissing', (fill && fill.checked) ? 'on' : 'off');
+
+  const res = await fetch('/api/upload.xlsx', { method:'POST', body: form });
+  const data = await res.json();
+  if(!res.ok){
+    $('results').innerHTML = '<div class="muted">업로드 실패: '+escapeHtml(data.error||'')+'</div>';
+    return;
+  }
+
+  const r = data.report || {};
+  $('results').innerHTML = `
+    <div class="panel">
+      <div class="panelTitle">업로드 결과</div>
+      <div class="row"><b>추가</b> ${r.added||0}</div>
+      <div class="row"><b>업데이트</b> ${r.updated||0}</div>
+      <div class="row"><b>LLM 채움</b> ${r.filledByLLM||0}</div>
+      <div class="row"><b>스킵</b> ${r.skipped||0}</div>
+      <div class="row"><b>총 용어수</b> ${data.count||0}</div>
+    </div>
+  `;
+}
+
 $('btnSearch').addEventListener('click', search);
 $('btnExport').addEventListener('click', ()=>{ window.location.href = '/api/export.xlsx'; });
+$('btnUpload').addEventListener('click', uploadXlsx);
 $('q').addEventListener('keydown', (e)=>{ if(e.key==='Enter') search(); });
 $('btnDraft').addEventListener('click', draft);
 
+loadCategories();
 window.loadTerm = loadTerm;
 </script>
 </body>
