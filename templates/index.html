@@ -20,7 +20,13 @@
       <button id="btnDraft" class="secondary" {{ 'disabled' if not llm_enabled else '' }}>
         없음 → 초안 생성
       </button>
-      {% if not llm_enabled %}
+
+      {% if llm_enabled %}
+      <label class="toggle">
+        <input type="checkbox" id="autoDraft" />
+        검색 결과 없으면 자동으로 초안 생성
+      </label>
+      {% else %}
       <div class="hint">LLM 초안 생성은 현재 비활성화(LLM_MODE=off) 상태입니다.</div>
       {% endif %}
     </section>
@@ -48,7 +54,14 @@ async function search(){
   const res = await fetch('/api/search?q='+encodeURIComponent(q));
   const data = await res.json();
   if(!data.results || data.results.length===0){
-    $('results').innerHTML = '<div class="muted">일치 항목 없음. ("없음 → 초안 생성" 가능)</div>';
+    $('results').innerHTML = '<div class="muted">일치 항목 없음.</div>';
+    // optional auto-draft when enabled
+    const auto = $('autoDraft');
+    if(auto && auto.checked){
+      await draft();
+      return;
+    }
+    $('results').innerHTML += '<div class="muted">("없음 → 초안 생성" 가능)</div>';
     return;
   }
   $('results').innerHTML = data.results.map(r=>
