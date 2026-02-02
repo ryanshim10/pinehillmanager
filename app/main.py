@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 import httpx
-from fastapi import FastAPI, File, Form, Request, UploadFile
+from fastapi import Body, FastAPI, File, Form, Request, UploadFile
 from fastapi.responses import HTMLResponse, JSONResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from jinja2 import Environment, FileSystemLoader, select_autoescape
@@ -67,12 +67,14 @@ def save_glossary(items: List[Dict[str, Any]]):
 
 
 def load_drafts() -> List[Dict[str, Any]]:
+    # Deprecated: drafts are now saved directly into glossary.json (no admin approval).
     if not DRAFTS_PATH.exists():
         return []
     return json.loads(DRAFTS_PATH.read_text(encoding="utf-8"))
 
 
 def save_drafts(items: List[Dict[str, Any]]):
+    # Deprecated
     DRAFTS_PATH.write_text(json.dumps(items, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
@@ -80,10 +82,7 @@ def find_term(term: str) -> Optional[Dict[str, Any]]:
     t = _norm(term)
     for item in load_glossary():
         if _norm(item.get("kr", "")) == t or _norm(item.get("en", "")) == t:
-            return {**item, "source": "glossary"}
-    for item in load_drafts():
-        if _norm(item.get("kr", "")) == t or _norm(item.get("en", "")) == t:
-            return {**item, "source": "draft"}
+            return {**item, "source": item.get("createdBy", "glossary")}
     return None
 
 
@@ -95,10 +94,8 @@ def search_terms(q: str, category: str = "") -> List[Dict[str, Any]]:
     if not qn and not catn:
         return out
 
-    # Search across glossary + drafts so user can find newly generated terms too.
-    glossary = load_glossary()
-    drafts = load_drafts()
-    items = glossary + drafts
+    # Search across glossary (all items are "confirmed" by default).
+    items = load_glossary()
 
     for item in items:
         if catn and _norm(item.get("category", "")) != catn:
@@ -120,7 +117,7 @@ def search_terms(q: str, category: str = "") -> List[Dict[str, Any]]:
             "en": item.get("en"),
             "category": item.get("category"),
             "oneLine": item.get("oneLine"),
-            "source": "draft" if item in drafts else "glossary",
+            "source": item.get("createdBy", "glossary"),
         })
 
     return out[:200]
@@ -251,7 +248,7 @@ def home(request: Request):
 def api_categories():
     # fixed list for UI consistency, but include any extra categories found in data
     cats = set(ALLOWED_CATEGORIES)
-    for it in load_glossary() + load_drafts():
+    for it in load_glossary():
         c = (it.get("category") or "").strip()
         if c:
             cats.add(c)
@@ -280,9 +277,7 @@ def api_export_xlsx():
     This is intentionally server-side so end users can download via GUI.
     """
 
-    glossary = load_glossary()
-    drafts = load_drafts()
-    items = glossary + drafts
+    items = load_glossary()
 
     wb = Workbook()
     ws = wb.active
@@ -307,7 +302,7 @@ def api_export_xlsx():
         cell.alignment = Alignment(vertical="top", wrap_text=True)
 
     for it in items:
-        src = "DRAFT" if it in drafts else "OK"
+        src = it.get("createdBy", "USER")
         ws.append(
             [
                 it.get("kr", ""),
@@ -469,8 +464,47 @@ async def api_upload_xlsx(file: UploadFile = File(...), fillMissing: str = Form(
     return {"ok": True, "report": report, "count": len(glossary)}
 
 
+@app.post("/api/save")
+def api_save(payload: Dict[str, Any] = Body(...)):
+    """Upsert a glossary item. User can edit freely (no approval workflow)."""
+    kr = (payload.get("kr") or "").strip()
+    if not kr:
+        return JSONResponse(status_code=400, content={"error": "MISSING_KR"})
+
+    item: Dict[str, Any] = {
+        "kr": kr,
+        "en": (payload.get("en") or "").strip(),
+        "category": (payload.get("category") or "").strip(),
+        "oneLine": (payload.get("oneLine") or "").strip(),
+        "example": (payload.get("example") or "").strip(),
+        "kpi": _split_list(payload.get("kpi")),
+        "confusions": _split_list(payload.get("confusions")),
+        "ask": _split_list(payload.get("ask")),
+        "createdBy": (payload.get("createdBy") or "USER").strip() or "USER",
+    }
+    if not item["category"]:
+        item["category"] = "AI"
+
+    glossary = load_glossary()
+    idx = None
+    tn = _norm(kr)
+    for i, it in enumerate(glossary):
+        if _norm(it.get("kr", "")) == tn:
+            idx = i
+            break
+
+    if idx is None:
+        glossary.append(item)
+    else:
+        glossary[idx] = item
+
+    save_glossary(glossary)
+    return {"ok": True, "item": find_term(kr)}
+
+
 @app.post("/api/draft")
 def api_draft(term: str = Form(...)):
+    """Generate a new term by LLM and save it immediately as confirmed."""
     term = term.strip()
     if not term:
         return JSONResponse(status_code=400, content={"error": "EMPTY"})
@@ -480,11 +514,10 @@ def api_draft(term: str = Form(...)):
         return {"alreadyExists": True, "item": existing}
 
     obj = llm_generate(term)
-    obj["status"] = "Draft"
     obj["createdBy"] = "LLM"
 
-    drafts = load_drafts()
-    drafts.insert(0, obj)
-    save_drafts(drafts)
+    glossary = load_glossary()
+    glossary.append(obj)
+    save_glossary(glossary)
 
-    return {"ok": True, "item": {**obj, "source": "draft"}}
+    return {"ok": True, "item": find_term(obj.get("kr") or term)}
