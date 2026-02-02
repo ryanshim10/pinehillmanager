@@ -27,7 +27,7 @@
 
       <button id="btnSearch">검색</button>
       <button id="btnExport" class="secondary">엑셀 다운로드</button>
-      <button id="btnDraft" class="accent" {{ 'disabled' if not llm_enabled else '' }}>
+      <button id="btnDraft" class="secondary" {{ 'disabled' if not llm_enabled else '' }}>
         없음 → 초안 생성
       </button>
 
@@ -60,13 +60,15 @@
       <div class="hint">엑셀 1행은 헤더. 최소 "용어(KR)" 컬럼이 필요해.</div>
     </section>
 
-    <section class="results">
-      <div id="results"></div>
-    </section>
+    <main class="grid">
+      <section class="results">
+        <div id="results"></div>
+      </section>
 
-    <section class="detail">
-      <div id="detail"></div>
-    </section>
+      <section class="detail">
+        <div id="detail"></div>
+      </section>
+    </main>
   </div>
 
 <script>
