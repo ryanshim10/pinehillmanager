@@ -114,21 +114,101 @@ async function loadTerm(term){
   const res = await fetch('/api/term?term='+encodeURIComponent(term));
   if(!res.ok){ $('detail').innerHTML = '<div class="muted">상세를 불러오지 못했어.</div>'; return; }
   const t = await res.json();
+  renderDetail(t);
+}
+
+function renderDetail(t){
   const kpi = (t.kpi||[]).map(x=>`<span class="pill">${escapeHtml(x)}</span>`).join(' ');
   const conf = (t.confusions||[]).map(x=>`<span class="pill">${escapeHtml(x)}</span>`).join(' ');
   const ask = (t.ask||[]).map(x=>`<li>${escapeHtml(x)}</li>`).join('');
 
+  const sourceTag = t.createdBy || t.source || 'USER';
+
   $('detail').innerHTML = `
     <div class="panel">
-      <div class="panelTitle">${escapeHtml(t.kr)} <span class="tag">${escapeHtml(t.en||'')}</span> <span class="tag ${t.source==='draft'?'warn':''}">${t.source==='draft'?'DRAFT':'OK'}</span></div>
+      <div class="panelTitle">${escapeHtml(t.kr)} <span class="tag">${escapeHtml(t.en||'')}</span> <span class="tag">${escapeHtml(sourceTag)}</span></div>
+
       <div class="row"><b>분류</b> ${escapeHtml(t.category||'')}</div>
       <div class="row"><b>한줄 정의</b><div>${escapeHtml(t.oneLine||'')}</div></div>
       <div class="row"><b>예시</b><div>${escapeHtml(t.example||'')}</div></div>
       <div class="row"><b>KPI</b><div>${kpi || '<span class="muted">-</span>'}</div></div>
       <div class="row"><b>혼동 용어</b><div>${conf || '<span class="muted">-</span>'}</div></div>
-      <div class="row"><b>임원 질문</b><ul>${ask || '<li class="muted">-</li>'}</ul></div>
+      <div class="row"><b>현업 질문</b><ul>${ask || '<li class="muted">-</li>'}</ul></div>
+
+      <div class="actions">
+        <button class="secondary" onclick="toggleEdit(true)">수정</button>
+      </div>
+
+      <div id="editBox" class="edit" style="display:none">
+        <div class="editGrid">
+          <label>용어(KR) <input id="e_kr" /></label>
+          <label>약어/EN <input id="e_en" /></label>
+          <label>분류 <input id="e_category" placeholder="전략/데이터/AI/자동화/운영/보안/성과" /></label>
+          <label>한줄 정의 <textarea id="e_oneLine" rows="2"></textarea></label>
+          <label>예시 <textarea id="e_example" rows="2"></textarea></label>
+          <label>KPI (쉼표/줄바꿈) <textarea id="e_kpi" rows="2"></textarea></label>
+          <label>혼동 용어 (쉼표/줄바꿈) <textarea id="e_confusions" rows="2"></textarea></label>
+          <label>현업 질문 (줄바꿈) <textarea id="e_ask" rows="3"></textarea></label>
+        </div>
+        <div class="actions">
+          <button onclick="saveEdit()">저장</button>
+          <button class="secondary" onclick="toggleEdit(false)">취소</button>
+        </div>
+      </div>
     </div>
   `;
+
+  // fill form
+  $('e_kr').value = t.kr || '';
+  $('e_en').value = t.en || '';
+  $('e_category').value = t.category || '';
+  $('e_oneLine').value = t.oneLine || '';
+  $('e_example').value = t.example || '';
+  $('e_kpi').value = (t.kpi||[]).join(', ');
+  $('e_confusions').value = (t.confusions||[]).join(', ');
+  $('e_ask').value = (t.ask||[]).join('\n');
+}
+
+function toggleEdit(on){
+  const box = $('editBox');
+  if(!box) return;
+  box.style.display = on ? 'block' : 'none';
+}
+
+function splitList(s){
+  if(!s) return [];
+  return s.split(/\n|,/).map(x=>x.trim()).filter(Boolean);
+}
+
+async function saveEdit(){
+  const payload = {
+    kr: $('e_kr').value.trim(),
+    en: $('e_en').value.trim(),
+    category: $('e_category').value.trim(),
+    oneLine: $('e_oneLine').value.trim(),
+    example: $('e_example').value.trim(),
+    kpi: splitList($('e_kpi').value),
+    confusions: splitList($('e_confusions').value),
+    ask: ($('e_ask').value||'').split(/\n/).map(x=>x.trim()).filter(Boolean),
+    createdBy: 'USER',
+  };
+
+  $('detail').insertAdjacentHTML('beforeend', '<div class="muted" id="saveMsg">저장 중…</div>');
+  const res = await fetch('/api/save', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+  const data = await res.json();
+  const msg = $('saveMsg');
+  if(msg) msg.remove();
+
+  if(!res.ok){
+    $('results').innerHTML = '<div class="muted">저장 실패: '+escapeHtml(data.error||'')+'</div>';
+    return;
+  }
+  toggleEdit(false);
+  renderDetail(data.item);
 }
 
 async function draft(){
@@ -140,7 +220,7 @@ async function draft(){
   const res = await fetch('/api/draft', { method:'POST', body: form });
   const data = await res.json();
   if(!res.ok){ $('detail').innerHTML = '<div class="muted">초안 생성 실패: '+escapeHtml(data.error||'')+'</div>'; return; }
-  loadTerm(data.item.kr);
+  renderDetail(data.item);
 }
 
 async function uploadXlsx(){
