@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>제조 AI/DX 용어집</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>제조 AI/DX 용어집</h1>
+      <p class="sub">검색 → 있으면 바로 보기, 없으면 (선택) 초안 생성</p>
+    </header>
+
+    <section class="search">
+      <input id="q" placeholder="예: RAG, OEE, MES, 예지보전" autocomplete="off" />
+      <button id="btnSearch">검색</button>
+      <button id="btnExport" class="secondary">엑셀 다운로드</button>
+      <button id="btnDraft" class="secondary" {{ 'disabled' if not llm_enabled else '' }}>
+        없음 → 초안 생성
+      </button>
+      {% if not llm_enabled %}
+      <div class="hint">LLM 초안 생성은 현재 비활성화(LLM_MODE=off) 상태입니다.</div>
+      {% endif %}
+    </section>
+
+    <section class="results">
+      <div id="results"></div>
+    </section>
+
+    <section class="detail">
+      <div id="detail"></div>
+    </section>
+  </div>
+
+<script>
+const $ = (id) => document.getElementById(id);
+
+function escapeHtml(s){
+  return (s||'').replace(/[&<>"']/g, (c)=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+async function search(){
+  const q = $('q').value.trim();
+  if(!q){ $('results').innerHTML = '<div class="muted">검색어를 입력해줘.</div>'; return; }
+  $('detail').innerHTML = '';
+  const res = await fetch('/api/search?q='+encodeURIComponent(q));
+  const data = await res.json();
+  if(!data.results || data.results.length===0){
+    $('results').innerHTML = '<div class="muted">일치 항목 없음. ("없음 → 초안 생성" 가능)</div>';
+    return;
+  }
+  $('results').innerHTML = data.results.map(r=>
+    `<div class="card" onclick="loadTerm('${escapeHtml(r.kr)}')">
+      <div class="title">${escapeHtml(r.kr)} <span class="tag">${escapeHtml(r.en||'')}</span></div>
+      <div class="meta">${escapeHtml(r.category||'')}</div>
+      <div class="desc">${escapeHtml(r.oneLine||'')}</div>
+    </div>`
+  ).join('');
+}
+
+async function loadTerm(term){
+  const res = await fetch('/api/term?term='+encodeURIComponent(term));
+  if(!res.ok){ $('detail').innerHTML = '<div class="muted">상세를 불러오지 못했어.</div>'; return; }
+  const t = await res.json();
+  const kpi = (t.kpi||[]).map(x=>`<span class="pill">${escapeHtml(x)}</span>`).join(' ');
+  const conf = (t.confusions||[]).map(x=>`<span class="pill">${escapeHtml(x)}</span>`).join(' ');
+  const ask = (t.ask||[]).map(x=>`<li>${escapeHtml(x)}</li>`).join('');
+
+  $('detail').innerHTML = `
+    <div class="panel">
+      <div class="panelTitle">${escapeHtml(t.kr)} <span class="tag">${escapeHtml(t.en||'')}</span> <span class="tag ${t.source==='draft'?'warn':''}">${t.source==='draft'?'DRAFT':'OK'}</span></div>
+      <div class="row"><b>분류</b> ${escapeHtml(t.category||'')}</div>
+      <div class="row"><b>한줄 정의</b><div>${escapeHtml(t.oneLine||'')}</div></div>
+      <div class="row"><b>예시</b><div>${escapeHtml(t.example||'')}</div></div>
+      <div class="row"><b>KPI</b><div>${kpi || '<span class="muted">-</span>'}</div></div>
+      <div class="row"><b>혼동 용어</b><div>${conf || '<span class="muted">-</span>'}</div></div>
+      <div class="row"><b>임원 질문</b><ul>${ask || '<li class="muted">-</li>'}</ul></div>
+    </div>
+  `;
+}
+
+async function draft(){
+  const term = $('q').value.trim();
+  if(!term){ return; }
+  $('detail').innerHTML = '<div class="muted">초안 생성 중…</div>';
+  const form = new FormData();
+  form.append('term', term);
+  const res = await fetch('/api/draft', { method:'POST', body: form });
+  const data = await res.json();
+  if(!res.ok){ $('detail').innerHTML = '<div class="muted">초안 생성 실패: '+escapeHtml(data.error||'')+'</div>'; return; }
+  loadTerm(data.item.kr);
+}
+
+$('btnSearch').addEventListener('click', search);
+$('btnExport').addEventListener('click', ()=>{ window.location.href = '/api/export.xlsx'; });
+$('q').addEventListener('keydown', (e)=>{ if(e.key==='Enter') search(); });
+$('btnDraft').addEventListener('click', draft);
+
+window.loadTerm = loadTerm;
+</script>
+</body>
+</html>
