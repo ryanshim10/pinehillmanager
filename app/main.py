@@ -6,12 +6,14 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 import httpx
-from fastapi import FastAPI, Form, Request
+from fastapi import FastAPI, File, Form, Request, UploadFile
 from fastapi.responses import HTMLResponse, JSONResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from jinja2 import Environment, FileSystemLoader, select_autoescape
-from openpyxl import Workbook
+from openpyxl import Workbook, load_workbook
 from openpyxl.styles import Alignment, Font
+
+ALLOWED_CATEGORIES = ["전략", "데이터", "AI", "자동화", "운영", "보안", "성과"]
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 DATA_PATH = BASE_DIR / "data" / "glossary.json"
@@ -60,6 +62,10 @@ def load_glossary() -> List[Dict[str, Any]]:
     return json.loads(DATA_PATH.read_text(encoding="utf-8"))
 
 
+def save_glossary(items: List[Dict[str, Any]]):
+    DATA_PATH.write_text(json.dumps(items, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+
 def load_drafts() -> List[Dict[str, Any]]:
     if not DRAFTS_PATH.exists():
         return []
@@ -81,22 +87,43 @@ def find_term(term: str) -> Optional[Dict[str, Any]]:
     return None
 
 
-def search_terms(q: str) -> List[Dict[str, Any]]:
+def search_terms(q: str, category: str = "") -> List[Dict[str, Any]]:
     qn = _norm(q)
-    out = []
-    if not qn:
+    catn = _norm(category)
+    out: List[Dict[str, Any]] = []
+
+    if not qn and not catn:
         return out
-    for item in load_glossary():
-        hay = " ".join([
-            item.get("kr", ""),
-            item.get("en", ""),
-            item.get("category", ""),
-            item.get("oneLine", ""),
-            " ".join(item.get("kpi", []) or []),
-        ])
-        if qn in _norm(hay):
-            out.append({"kr": item.get("kr"), "en": item.get("en"), "category": item.get("category"), "oneLine": item.get("oneLine")})
-    return out[:50]
+
+    # Search across glossary + drafts so user can find newly generated terms too.
+    glossary = load_glossary()
+    drafts = load_drafts()
+    items = glossary + drafts
+
+    for item in items:
+        if catn and _norm(item.get("category", "")) != catn:
+            continue
+
+        if qn:
+            hay = " ".join([
+                item.get("kr", ""),
+                item.get("en", ""),
+                item.get("category", ""),
+                item.get("oneLine", ""),
+                " ".join(item.get("kpi", []) or []),
+            ])
+            if qn not in _norm(hay):
+                continue
+
+        out.append({
+            "kr": item.get("kr"),
+            "en": item.get("en"),
+            "category": item.get("category"),
+            "oneLine": item.get("oneLine"),
+            "source": "draft" if item in drafts else "glossary",
+        })
+
+    return out[:200]
 
 
 def build_prompt(term: str) -> str:
@@ -117,6 +144,43 @@ def build_prompt(term: str) -> str:
         "  \"ask\": [\"임원이 물어볼 질문 2개\"]\n"
         "}\n"
     )
+
+
+def _split_list(s: Any) -> List[str]:
+    if s is None:
+        return []
+    if isinstance(s, list):
+        return [str(x).strip() for x in s if str(x).strip()]
+    s2 = str(s).strip()
+    if not s2:
+        return []
+    # allow comma or newline separated
+    parts = re.split(r"[\n,]+", s2)
+    return [p.strip() for p in parts if p.strip()]
+
+
+def _merge_keep_existing(dst: Dict[str, Any], src: Dict[str, Any]):
+    """Fill only missing/empty fields in dst from src."""
+    for k, v in src.items():
+        if v is None:
+            continue
+        if isinstance(v, str):
+            if not v.strip():
+                continue
+        if isinstance(v, list):
+            if len(v) == 0:
+                continue
+
+        cur = dst.get(k)
+        if cur is None:
+            dst[k] = v
+            continue
+        if isinstance(cur, str) and not cur.strip():
+            dst[k] = v
+            continue
+        if isinstance(cur, list) and len(cur) == 0:
+            dst[k] = v
+            continue
 
 
 def llm_generate(term: str) -> Dict[str, Any]:
@@ -183,9 +247,22 @@ def home(request: Request):
     return tpl.render(llm_enabled=(LLM_MODE != "off"))
 
 
+@app.get("/api/categories")
+def api_categories():
+    # fixed list for UI consistency, but include any extra categories found in data
+    cats = set(ALLOWED_CATEGORIES)
+    for it in load_glossary() + load_drafts():
+        c = (it.get("category") or "").strip()
+        if c:
+            cats.add(c)
+    ordered = [c for c in ALLOWED_CATEGORIES if c in cats]
+    extras = sorted([c for c in cats if c not in ordered])
+    return {"categories": ordered + extras}
+
+
 @app.get("/api/search")
-def api_search(q: str = ""):
-    return {"results": search_terms(q)}
+def api_search(q: str = "", category: str = ""):
+    return {"results": search_terms(q, category=category)}
 
 
 @app.get("/api/term")
@@ -266,6 +343,130 @@ def api_export_xlsx():
         media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         headers=headers_out,
     )
+
+
+@app.post("/api/upload.xlsx")
+async def api_upload_xlsx(file: UploadFile = File(...), fillMissing: str = Form("on")):
+    """Bulk upload terms from an Excel file.
+
+    - Missing columns can be auto-filled by LLM (if enabled).
+    - Uploaded rows are merged into glossary.json (the "OK" dataset).
+
+    Expected headers (row 1) - either Korean or keys:
+      용어(KR)|kr, 약어/EN|en, 분류|category, 한줄 정의|oneLine, 예시|example,
+      KPI|kpi, 혼동되는 용어|confusions, 현업 질문(체크리스트)|ask
+    """
+
+    if not file.filename or not file.filename.lower().endswith(".xlsx"):
+        return JSONResponse(status_code=400, content={"error": "XLSX_ONLY"})
+
+    content = await file.read()
+    wb = load_workbook(filename=BytesIO(content))
+    ws = wb.active
+
+    # Build header map
+    header_row = [c.value for c in next(ws.iter_rows(min_row=1, max_row=1))]
+    header_row = [str(x).strip() if x is not None else "" for x in header_row]
+
+    col_map: Dict[str, int] = {}
+    aliases = {
+        "kr": ["용어(KR)", "용어", "KR", "kr"],
+        "en": ["약어/EN", "EN", "en", "약어"],
+        "category": ["분류", "category"],
+        "oneLine": ["한줄 정의", "정의", "oneLine"],
+        "example": ["예시", "example"],
+        "kpi": ["KPI", "kpi"],
+        "confusions": ["혼동되는 용어", "confusions"],
+        "ask": ["현업 질문(체크리스트)", "임원 질문", "ask"],
+    }
+
+    for i, h in enumerate(header_row):
+        hn = h.strip()
+        if not hn:
+            continue
+        for key, names in aliases.items():
+            if hn in names:
+                col_map[key] = i
+
+    if "kr" not in col_map:
+        return JSONResponse(status_code=400, content={"error": "MISSING_KR_COLUMN", "headers": header_row})
+
+    glossary = load_glossary()
+
+    def find_index(term: str) -> Optional[int]:
+        tn = _norm(term)
+        for idx, it in enumerate(glossary):
+            if _norm(it.get("kr", "")) == tn or (_norm(it.get("en", "")) and _norm(it.get("en", "")) == tn):
+                return idx
+        return None
+
+    fill = fillMissing.lower() in ("1", "true", "on", "yes")
+
+    report = {"added": 0, "updated": 0, "filledByLLM": 0, "skipped": 0, "errors": []}
+
+    for row_idx, row in enumerate(ws.iter_rows(min_row=2), start=2):
+        try:
+            kr = row[col_map["kr"]].value if "kr" in col_map else ""
+            kr = str(kr).strip() if kr is not None else ""
+            if not kr:
+                report["skipped"] += 1
+                continue
+
+            entry: Dict[str, Any] = {
+                "kr": kr,
+                "en": str(row[col_map["en"]].value).strip() if ("en" in col_map and row[col_map["en"]].value is not None) else "",
+                "category": str(row[col_map["category"]].value).strip() if ("category" in col_map and row[col_map["category"]].value is not None) else "",
+                "oneLine": str(row[col_map["oneLine"]].value).strip() if ("oneLine" in col_map and row[col_map["oneLine"]].value is not None) else "",
+                "example": str(row[col_map["example"]].value).strip() if ("example" in col_map and row[col_map["example"]].value is not None) else "",
+                "kpi": _split_list(row[col_map["kpi"]].value) if "kpi" in col_map else [],
+                "confusions": _split_list(row[col_map["confusions"]].value) if "confusions" in col_map else [],
+                "ask": _split_list(row[col_map["ask"]].value) if "ask" in col_map else [],
+            }
+
+            # normalize category if empty
+            if not entry.get("category"):
+                entry["category"] = "AI"
+
+            # Auto-fill missing parts by LLM (never overwrite user-provided values)
+            if fill and (LLM_MODE != "off"):
+                needs = any([
+                    not entry.get("en"),
+                    not entry.get("category"),
+                    not entry.get("oneLine"),
+                    not entry.get("example"),
+                    not entry.get("kpi"),
+                    not entry.get("confusions"),
+                    not entry.get("ask"),
+                ])
+                if needs:
+                    gen = llm_generate(kr)
+                    # ensure list shapes
+                    gen["kpi"] = _split_list(gen.get("kpi"))
+                    gen["confusions"] = _split_list(gen.get("confusions"))
+                    gen["ask"] = _split_list(gen.get("ask"))
+                    _merge_keep_existing(entry, gen)
+                    report["filledByLLM"] += 1
+
+            idx = find_index(kr)
+            if idx is None and entry.get("en"):
+                idx = find_index(entry.get("en", ""))
+
+            if idx is None:
+                glossary.append(entry)
+                report["added"] += 1
+            else:
+                # merge: keep existing values, fill missing from uploaded/LLM
+                existing = glossary[idx]
+                merged = dict(existing)
+                _merge_keep_existing(merged, entry)
+                glossary[idx] = merged
+                report["updated"] += 1
+
+        except Exception as e:
+            report["errors"].append({"row": row_idx, "error": str(e)})
+
+    save_glossary(glossary)
+    return {"ok": True, "report": report, "count": len(glossary)}
 
 
 @app.post("/api/draft")

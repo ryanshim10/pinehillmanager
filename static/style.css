@@ -2,14 +2,18 @@ body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-se
 .container{max-width:980px;margin:24px auto;padding:0 16px}
 header h1{margin:0 0 6px 0;font-size:28px}
 .sub{margin:0;color:#9bb0d4}
-.search{display:flex;gap:8px;align-items:center;margin:18px 0 8px}
-.search input{flex:1;padding:12px 12px;border-radius:10px;border:1px solid #22304f;background:#0f1a2f;color:#e8eefc}
+.search{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:18px 0 8px}
+.search input{flex:1;min-width:240px;padding:12px 12px;border-radius:10px;border:1px solid #22304f;background:#0f1a2f;color:#e8eefc}
+select{padding:12px 12px;border-radius:10px;border:1px solid #22304f;background:#0f1a2f;color:#e8eefc}
 button{padding:12px 14px;border-radius:10px;border:1px solid #2a3b63;background:#1b2c55;color:#e8eefc;cursor:pointer}
 button.secondary{background:#111c33}
 button:disabled{opacity:.5;cursor:not-allowed}
 .hint{margin-top:8px;color:#93a8cf;font-size:12px}
 .toggle{display:flex;gap:8px;align-items:center;color:#cfe0ff;font-size:12px;margin-left:6px;user-select:none}
 .toggle input{accent-color:#3a5290}
+.upload{margin-top:12px}
+.uploadRow{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.upload input[type="file"]{padding:10px;border:1px solid #22304f;border-radius:10px;background:#0f1a2f;color:#e8eefc}
 .results{margin-top:10px}
 .card{border:1px solid #22304f;background:#0f1a2f;border-radius:12px;padding:12px;margin:10px 0;cursor:pointer}
 .card:hover{border-color:#3a5290}
