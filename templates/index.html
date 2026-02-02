@@ -127,8 +127,6 @@ async function loadTerm(term){
 function renderDetail(t){
   const kpi = (t.kpi||[]).map(x=>`<span class="pill">${escapeHtml(x)}</span>`).join(' ');
   const conf = (t.confusions||[]).map(x=>`<span class="pill">${escapeHtml(x)}</span>`).join(' ');
-  const ask = (t.ask||[]).map(x=>`<li>${escapeHtml(x)}</li>`).join('');
-
   const sourceTag = t.createdBy || t.source || 'USER';
 
   $('detail').innerHTML = `
@@ -140,8 +138,6 @@ function renderDetail(t){
       <div class="row"><b>예시</b><div>${escapeHtml(t.example||'')}</div></div>
       <div class="row"><b>KPI</b><div>${kpi || '<span class="muted">-</span>'}</div></div>
       <div class="row"><b>혼동 용어</b><div>${conf || '<span class="muted">-</span>'}</div></div>
-      <div class="row"><b>현업 질문</b><ul>${ask || '<li class="muted">-</li>'}</ul></div>
-
       <div class="actions">
         <button class="secondary" onclick="toggleEdit(true)">수정</button>
       </div>
@@ -155,7 +151,6 @@ function renderDetail(t){
           <label>예시 <textarea id="e_example" rows="2"></textarea></label>
           <label>KPI (쉼표/줄바꿈) <textarea id="e_kpi" rows="2"></textarea></label>
           <label>혼동 용어 (쉼표/줄바꿈) <textarea id="e_confusions" rows="2"></textarea></label>
-          <label>현업 질문 (줄바꿈) <textarea id="e_ask" rows="3"></textarea></label>
         </div>
         <div class="actions">
           <button onclick="saveEdit()">저장</button>
@@ -173,7 +168,6 @@ function renderDetail(t){
   $('e_example').value = t.example || '';
   $('e_kpi').value = (t.kpi||[]).join(', ');
   $('e_confusions').value = (t.confusions||[]).join(', ');
-  $('e_ask').value = (t.ask||[]).join('\n');
 }
 
 function toggleEdit(on){
@@ -196,7 +190,6 @@ async function saveEdit(){
     example: $('e_example').value.trim(),
     kpi: splitList($('e_kpi').value),
     confusions: splitList($('e_confusions').value),
-    ask: ($('e_ask').value||'').split(/\n/).map(x=>x.trim()).filter(Boolean),
     createdBy: 'USER',
   };
 

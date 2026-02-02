@@ -1,0 +1,1209 @@
+[
+  {
+    "kr": "디지털 전환",
+    "en": "DX",
+    "category": "전략",
+    "oneLine": "공정·업무를 디지털로 재설계해 성과(KPI)를 내는 활동",
+    "example": "수기 생산실적→MES/대시보드로 자동 집계",
+    "kpi": [
+      "OEE",
+      "OTD",
+      "리드타임",
+      "원가"
+    ],
+    "confusions": [
+      "AX",
+      "스마트팩토리"
+    ]
+  },
+  {
+    "kr": "AI 전환",
+    "en": "AX",
+    "category": "전략",
+    "oneLine": "AI를 핵심 수단으로 운영·의사결정을 고도화하는 전환",
+    "example": "불량 예측/예지보전으로 계획정비 전환",
+    "kpi": [
+      "불량률",
+      "OEE",
+      "원가"
+    ],
+    "confusions": [
+      "DX",
+      "AI(ML)"
+    ]
+  },
+  {
+    "kr": "스마트팩토리",
+    "en": "Smart Factory",
+    "category": "전략",
+    "oneLine": "설비·공정 데이터를 연결해 모니터링/분석/자동화를 구현한 운영체계",
+    "example": "설비/품질/생산 데이터를 한 화면에서 보고 조치",
+    "kpi": [
+      "OEE",
+      "불량률",
+      "리드타임"
+    ],
+    "confusions": [
+      "MES",
+      "SCADA"
+    ]
+  },
+  {
+    "kr": "제조 실행 시스템",
+    "en": "MES",
+    "category": "운영",
+    "oneLine": "현장 시스템(MES/설비/품질/정비) 운영을 위한 실행 개념",
+    "example": "예: 제조 실행 시스템 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [
+      "OEE",
+      "불량률",
+      "리드타임",
+      "OTD",
+      "원가"
+    ],
+    "confusions": []
+  },
+  {
+    "kr": "설비 데이터 수집/감시",
+    "en": "SCADA",
+    "category": "운영",
+    "oneLine": "현장 시스템(MES/설비/품질/정비) 운영을 위한 실행 개념",
+    "example": "예: 설비 데이터 수집/감시 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [
+      "OEE",
+      "불량률",
+      "리드타임",
+      "OTD",
+      "원가"
+    ],
+    "confusions": []
+  },
+  {
+    "kr": "전사 자원 관리",
+    "en": "ERP",
+    "category": "운영",
+    "oneLine": "현장 시스템(MES/설비/품질/정비) 운영을 위한 실행 개념",
+    "example": "예: 전사 자원 관리 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [
+      "OEE",
+      "불량률",
+      "리드타임",
+      "OTD",
+      "원가"
+    ],
+    "confusions": []
+  },
+  {
+    "kr": "생산 계획 시스템",
+    "en": "APS",
+    "category": "운영",
+    "oneLine": "현장 시스템(MES/설비/품질/정비) 운영을 위한 실행 개념",
+    "example": "예: 생산 계획 시스템 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [
+      "OEE",
+      "불량률",
+      "리드타임",
+      "OTD",
+      "원가"
+    ],
+    "confusions": []
+  },
+  {
+    "kr": "설비 종합 효율",
+    "en": "OEE",
+    "category": "성과",
+    "oneLine": "성과 측정과 의사결정에 쓰는 대표 KPI/지표 개념",
+    "example": "예: 설비 종합 효율 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [],
+    "confusions": []
+  },
+  {
+    "kr": "납기 준수",
+    "en": "OTD",
+    "category": "성과",
+    "oneLine": "성과 측정과 의사결정에 쓰는 대표 KPI/지표 개념",
+    "example": "예: 납기 준수 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [],
+    "confusions": []
+  },
+  {
+    "kr": "리드타임",
+    "en": "Lead Time",
+    "category": "성과",
+    "oneLine": "성과 측정과 의사결정에 쓰는 대표 KPI/지표 개념",
+    "example": "예: 리드타임 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [],
+    "confusions": []
+  },
+  {
+    "kr": "불량률",
+    "en": "Defect Rate",
+    "category": "성과",
+    "oneLine": "성과 측정과 의사결정에 쓰는 대표 KPI/지표 개념",
+    "example": "예: 불량률 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [],
+    "confusions": []
+  },
+  {
+    "kr": "공정능력지수",
+    "en": "Cp/Cpk",
+    "category": "성과",
+    "oneLine": "성과 측정과 의사결정에 쓰는 대표 KPI/지표 개념",
+    "example": "예: 공정능력지수 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [],
+    "confusions": []
+  },
+  {
+    "kr": "예지보전",
+    "en": "PdM",
+    "category": "AI",
+    "oneLine": "예측/분류/최적화/생성 등 AI 적용을 위한 모델/기법",
+    "example": "예: 예지보전 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [
+      "정확도",
+      "리드타임"
+    ],
+    "confusions": []
+  },
+  {
+    "kr": "이상탐지",
+    "en": "Anomaly Detection",
+    "category": "AI",
+    "oneLine": "예측/분류/최적화/생성 등 AI 적용을 위한 모델/기법",
+    "example": "예: 이상탐지 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [
+      "정확도",
+      "리드타임"
+    ],
+    "confusions": []
+  },
+  {
+    "kr": "품질 예측",
+    "en": "Quality Prediction",
+    "category": "AI",
+    "oneLine": "예측/분류/최적화/생성 등 AI 적용을 위한 모델/기법",
+    "example": "예: 품질 예측 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [
+      "정확도",
+      "리드타임"
+    ],
+    "confusions": []
+  },
+  {
+    "kr": "수요 예측",
+    "en": "Demand Forecasting",
+    "category": "AI",
+    "oneLine": "예측/분류/최적화/생성 등 AI 적용을 위한 모델/기법",
+    "example": "예: 수요 예측 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [
+      "정확도",
+      "리드타임"
+    ],
+    "confusions": []
+  },
+  {
+    "kr": "재고 최적화",
+    "en": "Inventory Optimization",
+    "category": "AI",
+    "oneLine": "예측/분류/최적화/생성 등 AI 적용을 위한 모델/기법",
+    "example": "예: 재고 최적화 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [
+      "정확도",
+      "리드타임"
+    ],
+    "confusions": []
+  },
+  {
+    "kr": "처방/최적화",
+    "en": "Prescriptive Optimization",
+    "category": "AI",
+    "oneLine": "예측/분류/최적화/생성 등 AI 적용을 위한 모델/기법",
+    "example": "예: 처방/최적화 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [
+      "정확도",
+      "리드타임"
+    ],
+    "confusions": []
+  },
+  {
+    "kr": "업무 자동화",
+    "en": "RPA",
+    "category": "자동화",
+    "oneLine": "반복 업무/승인/리포팅 등을 자동화하는 업무 자동화 개념",
+    "example": "예: 업무 자동화 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [],
+    "confusions": []
+  },
+  {
+    "kr": "업무 프로세스 관리",
+    "en": "BPM",
+    "category": "자동화",
+    "oneLine": "반복 업무/승인/리포팅 등을 자동화하는 업무 자동화 개념",
+    "example": "예: 업무 프로세스 관리 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [],
+    "confusions": []
+  },
+  {
+    "kr": "워크플로우 자동화",
+    "en": "Workflow Automation",
+    "category": "자동화",
+    "oneLine": "반복 업무/승인/리포팅 등을 자동화하는 업무 자동화 개념",
+    "example": "예: 워크플로우 자동화 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [],
+    "confusions": []
+  },
+  {
+    "kr": "전자 작업 지시",
+    "en": "e-Work Instruction",
+    "category": "운영",
+    "oneLine": "현장 시스템(MES/설비/품질/정비) 운영을 위한 실행 개념",
+    "example": "예: 전자 작업 지시 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [
+      "OEE",
+      "불량률",
+      "리드타임",
+      "OTD",
+      "원가"
+    ],
+    "confusions": []
+  },
+  {
+    "kr": "작업 표준서",
+    "en": "SOP",
+    "category": "운영",
+    "oneLine": "현장 시스템(MES/설비/품질/정비) 운영을 위한 실행 개념",
+    "example": "예: 작업 표준서 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [
+      "OEE",
+      "불량률",
+      "리드타임",
+      "OTD",
+      "원가"
+    ],
+    "confusions": []
+  },
+  {
+    "kr": "추적성",
+    "en": "Traceability",
+    "category": "운영",
+    "oneLine": "현장 시스템(MES/설비/품질/정비) 운영을 위한 실행 개념",
+    "example": "예: 추적성 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [
+      "OEE",
+      "불량률",
+      "리드타임",
+      "OTD",
+      "원가"
+    ],
+    "confusions": []
+  },
+  {
+    "kr": "LOT 관리",
+    "en": "Lot Tracking",
+    "category": "운영",
+    "oneLine": "현장 시스템(MES/설비/품질/정비) 운영을 위한 실행 개념",
+    "example": "예: LOT 관리 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [
+      "OEE",
+      "불량률",
+      "리드타임",
+      "OTD",
+      "원가"
+    ],
+    "confusions": []
+  },
+  {
+    "kr": "바코드/QR",
+    "en": "Barcode/QR",
+    "category": "운영",
+    "oneLine": "현장 시스템(MES/설비/품질/정비) 운영을 위한 실행 개념",
+    "example": "예: 바코드/QR 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [
+      "OEE",
+      "불량률",
+      "리드타임",
+      "OTD",
+      "원가"
+    ],
+    "confusions": []
+  },
+  {
+    "kr": "RFID",
+    "en": "RFID",
+    "category": "운영",
+    "oneLine": "현장 시스템(MES/설비/품질/정비) 운영을 위한 실행 개념",
+    "example": "예: RFID 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [
+      "OEE",
+      "불량률",
+      "리드타임",
+      "OTD",
+      "원가"
+    ],
+    "confusions": []
+  },
+  {
+    "kr": "디지털 트윈",
+    "en": "Digital Twin",
+    "category": "전략",
+    "oneLine": "제조 현장에서 성과를 내기 위한 체계/전략/로드맵 개념",
+    "example": "예: 디지털 트윈를 기준으로 현장 데이터를 표준화/자동화하여 지표를 개선",
+    "kpi": [
+      "OEE",
+      "불량률",
+      "리드타임",
+      "OTD",
+      "원가"
+    ],
+    "confusions": []
+  },
+  {
+    "kr": "공정 시뮬레이션",
+    "en": "Process Simulation",
+    "category": "전략",
+    "oneLine": "제조 현장에서 성과를 내기 위한 체계/전략/로드맵 개념",
+    "example": "예: 공정 시뮬레이션를 기준으로 현장 데이터를 표준화/자동화하여 지표를 개선",
+    "kpi": [
+      "OEE",
+      "불량률",
+      "리드타임",
+      "OTD",
+      "원가"
+    ],
+    "confusions": []
+  },
+  {
+    "kr": "현장 대시보드",
+    "en": "Shopfloor Dashboard",
+    "category": "운영",
+    "oneLine": "현장 시스템(MES/설비/품질/정비) 운영을 위한 실행 개념",
+    "example": "예: 현장 대시보드 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [
+      "OEE",
+      "불량률",
+      "리드타임",
+      "OTD",
+      "원가"
+    ],
+    "confusions": []
+  },
+  {
+    "kr": "Andon",
+    "en": "Andon",
+    "category": "운영",
+    "oneLine": "현장 시스템(MES/설비/품질/정비) 운영을 위한 실행 개념",
+    "example": "예: Andon 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [
+      "OEE",
+      "불량률",
+      "리드타임",
+      "OTD",
+      "원가"
+    ],
+    "confusions": []
+  },
+  {
+    "kr": "알람 관리",
+    "en": "Alarm Management",
+    "category": "운영",
+    "oneLine": "현장 시스템(MES/설비/품질/정비) 운영을 위한 실행 개념",
+    "example": "예: 알람 관리 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [
+      "OEE",
+      "불량률",
+      "리드타임",
+      "OTD",
+      "원가"
+    ],
+    "confusions": []
+  },
+  {
+    "kr": "원인코드",
+    "en": "Downtime Reason Code",
+    "category": "운영",
+    "oneLine": "현장 시스템(MES/설비/품질/정비) 운영을 위한 실행 개념",
+    "example": "예: 원인코드 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [
+      "OEE",
+      "불량률",
+      "리드타임",
+      "OTD",
+      "원가"
+    ],
+    "confusions": []
+  },
+  {
+    "kr": "가동률",
+    "en": "Availability",
+    "category": "성과",
+    "oneLine": "성과 측정과 의사결정에 쓰는 대표 KPI/지표 개념",
+    "example": "예: 가동률 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [],
+    "confusions": []
+  },
+  {
+    "kr": "성능",
+    "en": "Performance",
+    "category": "성과",
+    "oneLine": "성과 측정과 의사결정에 쓰는 대표 KPI/지표 개념",
+    "example": "예: 성능 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [],
+    "confusions": []
+  },
+  {
+    "kr": "품질",
+    "en": "Quality",
+    "category": "성과",
+    "oneLine": "성과 측정과 의사결정에 쓰는 대표 KPI/지표 개념",
+    "example": "예: 품질 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [],
+    "confusions": []
+  },
+  {
+    "kr": "FPY",
+    "en": "First Pass Yield",
+    "category": "성과",
+    "oneLine": "성과 측정과 의사결정에 쓰는 대표 KPI/지표 개념",
+    "example": "예: FPY 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [],
+    "confusions": []
+  },
+  {
+    "kr": "RTY",
+    "en": "Rolled Throughput Yield",
+    "category": "성과",
+    "oneLine": "성과 측정과 의사결정에 쓰는 대표 KPI/지표 개념",
+    "example": "예: RTY 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [],
+    "confusions": []
+  },
+  {
+    "kr": "스크랩",
+    "en": "Scrap",
+    "category": "성과",
+    "oneLine": "성과 측정과 의사결정에 쓰는 대표 KPI/지표 개념",
+    "example": "예: 스크랩 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [],
+    "confusions": []
+  },
+  {
+    "kr": "재작업",
+    "en": "Rework",
+    "category": "성과",
+    "oneLine": "성과 측정과 의사결정에 쓰는 대표 KPI/지표 개념",
+    "example": "예: 재작업 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [],
+    "confusions": []
+  },
+  {
+    "kr": "공정 검사",
+    "en": "In-Process Inspection",
+    "category": "운영",
+    "oneLine": "현장 시스템(MES/설비/품질/정비) 운영을 위한 실행 개념",
+    "example": "예: 공정 검사 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [
+      "OEE",
+      "불량률",
+      "리드타임",
+      "OTD",
+      "원가"
+    ],
+    "confusions": []
+  },
+  {
+    "kr": "SPC",
+    "en": "Statistical Process Control",
+    "category": "성과",
+    "oneLine": "성과 측정과 의사결정에 쓰는 대표 KPI/지표 개념",
+    "example": "예: SPC 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [],
+    "confusions": []
+  },
+  {
+    "kr": "관리도",
+    "en": "Control Chart",
+    "category": "성과",
+    "oneLine": "성과 측정과 의사결정에 쓰는 대표 KPI/지표 개념",
+    "example": "예: 관리도 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [],
+    "confusions": []
+  },
+  {
+    "kr": "MSA",
+    "en": "Measurement System Analysis",
+    "category": "성과",
+    "oneLine": "성과 측정과 의사결정에 쓰는 대표 KPI/지표 개념",
+    "example": "예: MSA 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [],
+    "confusions": []
+  },
+  {
+    "kr": "Gage R&R",
+    "en": "Gage R&R",
+    "category": "성과",
+    "oneLine": "성과 측정과 의사결정에 쓰는 대표 KPI/지표 개념",
+    "example": "예: Gage R&R 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [],
+    "confusions": []
+  },
+  {
+    "kr": "FMEA",
+    "en": "FMEA",
+    "category": "보안",
+    "oneLine": "제조/데이터/AI 운영에서 권한·감사·보호를 위한 보안 개념",
+    "example": "예: FMEA 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [],
+    "confusions": []
+  },
+  {
+    "kr": "8D",
+    "en": "8D Report",
+    "category": "운영",
+    "oneLine": "현장 시스템(MES/설비/품질/정비) 운영을 위한 실행 개념",
+    "example": "예: 8D 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [
+      "OEE",
+      "불량률",
+      "리드타임",
+      "OTD",
+      "원가"
+    ],
+    "confusions": []
+  },
+  {
+    "kr": "CAPA",
+    "en": "Corrective and Preventive Action",
+    "category": "운영",
+    "oneLine": "현장 시스템(MES/설비/품질/정비) 운영을 위한 실행 개념",
+    "example": "예: CAPA 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [
+      "OEE",
+      "불량률",
+      "리드타임",
+      "OTD",
+      "원가"
+    ],
+    "confusions": []
+  },
+  {
+    "kr": "변경관리",
+    "en": "Change Control",
+    "category": "운영",
+    "oneLine": "현장 시스템(MES/설비/품질/정비) 운영을 위한 실행 개념",
+    "example": "예: 변경관리 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [
+      "OEE",
+      "불량률",
+      "리드타임",
+      "OTD",
+      "원가"
+    ],
+    "confusions": []
+  },
+  {
+    "kr": "설비 점검",
+    "en": "PM",
+    "category": "운영",
+    "oneLine": "현장 시스템(MES/설비/품질/정비) 운영을 위한 실행 개념",
+    "example": "예: 설비 점검 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [
+      "OEE",
+      "불량률",
+      "리드타임",
+      "OTD",
+      "원가"
+    ],
+    "confusions": []
+  },
+  {
+    "kr": "정비 이력",
+    "en": "Maintenance History",
+    "category": "운영",
+    "oneLine": "현장 시스템(MES/설비/품질/정비) 운영을 위한 실행 개념",
+    "example": "예: 정비 이력 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [
+      "OEE",
+      "불량률",
+      "리드타임",
+      "OTD",
+      "원가"
+    ],
+    "confusions": []
+  },
+  {
+    "kr": "고장 모드",
+    "en": "Failure Mode",
+    "category": "운영",
+    "oneLine": "현장 시스템(MES/설비/품질/정비) 운영을 위한 실행 개념",
+    "example": "예: 고장 모드 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [
+      "OEE",
+      "불량률",
+      "리드타임",
+      "OTD",
+      "원가"
+    ],
+    "confusions": []
+  },
+  {
+    "kr": "센서",
+    "en": "Sensor",
+    "category": "운영",
+    "oneLine": "현장 시스템(MES/설비/품질/정비) 운영을 위한 실행 개념",
+    "example": "예: 센서 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [
+      "OEE",
+      "불량률",
+      "리드타임",
+      "OTD",
+      "원가"
+    ],
+    "confusions": []
+  },
+  {
+    "kr": "진동 분석",
+    "en": "Vibration Analysis",
+    "category": "AI",
+    "oneLine": "예측/분류/최적화/생성 등 AI 적용을 위한 모델/기법",
+    "example": "예: 진동 분석 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [
+      "정확도",
+      "리드타임"
+    ],
+    "confusions": []
+  },
+  {
+    "kr": "열화상",
+    "en": "Thermal Imaging",
+    "category": "AI",
+    "oneLine": "예측/분류/최적화/생성 등 AI 적용을 위한 모델/기법",
+    "example": "예: 열화상 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [
+      "정확도",
+      "리드타임"
+    ],
+    "confusions": []
+  },
+  {
+    "kr": "비전 검사",
+    "en": "Vision Inspection",
+    "category": "AI",
+    "oneLine": "예측/분류/최적화/생성 등 AI 적용을 위한 모델/기법",
+    "example": "예: 비전 검사 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [
+      "정확도",
+      "리드타임"
+    ],
+    "confusions": []
+  },
+  {
+    "kr": "OCR",
+    "en": "OCR",
+    "category": "AI",
+    "oneLine": "예측/분류/최적화/생성 등 AI 적용을 위한 모델/기법",
+    "example": "예: OCR 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [
+      "정확도",
+      "리드타임"
+    ],
+    "confusions": []
+  },
+  {
+    "kr": "결함 분류",
+    "en": "Defect Classification",
+    "category": "AI",
+    "oneLine": "예측/분류/최적화/생성 등 AI 적용을 위한 모델/기법",
+    "example": "예: 결함 분류 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [
+      "정확도",
+      "리드타임"
+    ],
+    "confusions": []
+  },
+  {
+    "kr": "세그멘테이션",
+    "en": "Segmentation",
+    "category": "AI",
+    "oneLine": "예측/분류/최적화/생성 등 AI 적용을 위한 모델/기법",
+    "example": "예: 세그멘테이션 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [
+      "정확도",
+      "리드타임"
+    ],
+    "confusions": []
+  },
+  {
+    "kr": "객체 탐지",
+    "en": "Object Detection",
+    "category": "AI",
+    "oneLine": "예측/분류/최적화/생성 등 AI 적용을 위한 모델/기법",
+    "example": "예: 객체 탐지 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [
+      "정확도",
+      "리드타임"
+    ],
+    "confusions": []
+  },
+  {
+    "kr": "모델 배포",
+    "en": "Model Deployment",
+    "category": "운영",
+    "oneLine": "현장 시스템(MES/설비/품질/정비) 운영을 위한 실행 개념",
+    "example": "예: 모델 배포 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [
+      "OEE",
+      "불량률",
+      "리드타임",
+      "OTD",
+      "원가"
+    ],
+    "confusions": []
+  },
+  {
+    "kr": "모델 모니터링",
+    "en": "Model Monitoring",
+    "category": "운영",
+    "oneLine": "현장 시스템(MES/설비/품질/정비) 운영을 위한 실행 개념",
+    "example": "예: 모델 모니터링 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [
+      "OEE",
+      "불량률",
+      "리드타임",
+      "OTD",
+      "원가"
+    ],
+    "confusions": []
+  },
+  {
+    "kr": "데이터 드리프트",
+    "en": "Data Drift",
+    "category": "운영",
+    "oneLine": "현장 시스템(MES/설비/품질/정비) 운영을 위한 실행 개념",
+    "example": "예: 데이터 드리프트 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [
+      "OEE",
+      "불량률",
+      "리드타임",
+      "OTD",
+      "원가"
+    ],
+    "confusions": []
+  },
+  {
+    "kr": "모델 드리프트",
+    "en": "Model Drift",
+    "category": "운영",
+    "oneLine": "현장 시스템(MES/설비/품질/정비) 운영을 위한 실행 개념",
+    "example": "예: 모델 드리프트 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [
+      "OEE",
+      "불량률",
+      "리드타임",
+      "OTD",
+      "원가"
+    ],
+    "confusions": []
+  },
+  {
+    "kr": "MLOps",
+    "en": "MLOps",
+    "category": "운영",
+    "oneLine": "현장 시스템(MES/설비/품질/정비) 운영을 위한 실행 개념",
+    "example": "예: MLOps 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [
+      "OEE",
+      "불량률",
+      "리드타임",
+      "OTD",
+      "원가"
+    ],
+    "confusions": []
+  },
+  {
+    "kr": "피처 스토어",
+    "en": "Feature Store",
+    "category": "데이터",
+    "oneLine": "제조 데이터 수집·정제·표준·활용을 위한 데이터 개념",
+    "example": "예: 피처 스토어를 기준으로 현장 데이터를 표준화/자동화하여 지표를 개선",
+    "kpi": [],
+    "confusions": []
+  },
+  {
+    "kr": "데이터 레이크",
+    "en": "Data Lake",
+    "category": "데이터",
+    "oneLine": "제조 데이터 수집·정제·표준·활용을 위한 데이터 개념",
+    "example": "예: 데이터 레이크를 기준으로 현장 데이터를 표준화/자동화하여 지표를 개선",
+    "kpi": [],
+    "confusions": []
+  },
+  {
+    "kr": "데이터 웨어하우스",
+    "en": "Data Warehouse",
+    "category": "데이터",
+    "oneLine": "제조 데이터 수집·정제·표준·활용을 위한 데이터 개념",
+    "example": "예: 데이터 웨어하우스를 기준으로 현장 데이터를 표준화/자동화하여 지표를 개선",
+    "kpi": [],
+    "confusions": []
+  },
+  {
+    "kr": "ETL/ELT",
+    "en": "ETL/ELT",
+    "category": "데이터",
+    "oneLine": "제조 데이터 수집·정제·표준·활용을 위한 데이터 개념",
+    "example": "예: ETL/ELT를 기준으로 현장 데이터를 표준화/자동화하여 지표를 개선",
+    "kpi": [],
+    "confusions": []
+  },
+  {
+    "kr": "데이터 거버넌스",
+    "en": "Data Governance",
+    "category": "데이터",
+    "oneLine": "제조 데이터 수집·정제·표준·활용을 위한 데이터 개념",
+    "example": "예: 데이터 거버넌스를 기준으로 현장 데이터를 표준화/자동화하여 지표를 개선",
+    "kpi": [],
+    "confusions": []
+  },
+  {
+    "kr": "데이터 품질",
+    "en": "Data Quality",
+    "category": "데이터",
+    "oneLine": "제조 데이터 수집·정제·표준·활용을 위한 데이터 개념",
+    "example": "예: 데이터 품질를 기준으로 현장 데이터를 표준화/자동화하여 지표를 개선",
+    "kpi": [],
+    "confusions": []
+  },
+  {
+    "kr": "마스터 데이터",
+    "en": "Master Data",
+    "category": "데이터",
+    "oneLine": "제조 데이터 수집·정제·표준·활용을 위한 데이터 개념",
+    "example": "예: 마스터 데이터를 기준으로 현장 데이터를 표준화/자동화하여 지표를 개선",
+    "kpi": [],
+    "confusions": []
+  },
+  {
+    "kr": "BOM",
+    "en": "BOM",
+    "category": "운영",
+    "oneLine": "현장 시스템(MES/설비/품질/정비) 운영을 위한 실행 개념",
+    "example": "예: BOM 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [
+      "OEE",
+      "불량률",
+      "리드타임",
+      "OTD",
+      "원가"
+    ],
+    "confusions": []
+  },
+  {
+    "kr": "라우팅",
+    "en": "Routing",
+    "category": "운영",
+    "oneLine": "현장 시스템(MES/설비/품질/정비) 운영을 위한 실행 개념",
+    "example": "예: 라우팅 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [
+      "OEE",
+      "불량률",
+      "리드타임",
+      "OTD",
+      "원가"
+    ],
+    "confusions": []
+  },
+  {
+    "kr": "공정 레시피",
+    "en": "Recipe",
+    "category": "운영",
+    "oneLine": "현장 시스템(MES/설비/품질/정비) 운영을 위한 실행 개념",
+    "example": "예: 공정 레시피 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [
+      "OEE",
+      "불량률",
+      "리드타임",
+      "OTD",
+      "원가"
+    ],
+    "confusions": []
+  },
+  {
+    "kr": "레시피 관리",
+    "en": "Recipe Management",
+    "category": "운영",
+    "oneLine": "현장 시스템(MES/설비/품질/정비) 운영을 위한 실행 개념",
+    "example": "예: 레시피 관리 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [
+      "OEE",
+      "불량률",
+      "리드타임",
+      "OTD",
+      "원가"
+    ],
+    "confusions": []
+  },
+  {
+    "kr": "OPC UA",
+    "en": "OPC UA",
+    "category": "운영",
+    "oneLine": "현장 시스템(MES/설비/품질/정비) 운영을 위한 실행 개념",
+    "example": "예: OPC UA 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [
+      "OEE",
+      "불량률",
+      "리드타임",
+      "OTD",
+      "원가"
+    ],
+    "confusions": []
+  },
+  {
+    "kr": "Modbus",
+    "en": "Modbus",
+    "category": "운영",
+    "oneLine": "현장 시스템(MES/설비/품질/정비) 운영을 위한 실행 개념",
+    "example": "예: Modbus 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [
+      "OEE",
+      "불량률",
+      "리드타임",
+      "OTD",
+      "원가"
+    ],
+    "confusions": []
+  },
+  {
+    "kr": "PLC",
+    "en": "PLC",
+    "category": "운영",
+    "oneLine": "현장 시스템(MES/설비/품질/정비) 운영을 위한 실행 개념",
+    "example": "예: PLC 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [
+      "OEE",
+      "불량률",
+      "리드타임",
+      "OTD",
+      "원가"
+    ],
+    "confusions": []
+  },
+  {
+    "kr": "Edge 컴퓨팅",
+    "en": "Edge Computing",
+    "category": "데이터",
+    "oneLine": "제조 데이터 수집·정제·표준·활용을 위한 데이터 개념",
+    "example": "예: Edge 컴퓨팅를 기준으로 현장 데이터를 표준화/자동화하여 지표를 개선",
+    "kpi": [],
+    "confusions": []
+  },
+  {
+    "kr": "게이트웨이",
+    "en": "IIoT Gateway",
+    "category": "운영",
+    "oneLine": "현장 시스템(MES/설비/품질/정비) 운영을 위한 실행 개념",
+    "example": "예: 게이트웨이 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [
+      "OEE",
+      "불량률",
+      "리드타임",
+      "OTD",
+      "원가"
+    ],
+    "confusions": []
+  },
+  {
+    "kr": "시간동기",
+    "en": "NTP/PTP",
+    "category": "운영",
+    "oneLine": "현장 시스템(MES/설비/품질/정비) 운영을 위한 실행 개념",
+    "example": "예: 시간동기 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [
+      "OEE",
+      "불량률",
+      "리드타임",
+      "OTD",
+      "원가"
+    ],
+    "confusions": []
+  },
+  {
+    "kr": "시계열 데이터",
+    "en": "Time-series Data",
+    "category": "데이터",
+    "oneLine": "제조 데이터 수집·정제·표준·활용을 위한 데이터 개념",
+    "example": "예: 시계열 데이터를 기준으로 현장 데이터를 표준화/자동화하여 지표를 개선",
+    "kpi": [],
+    "confusions": []
+  },
+  {
+    "kr": "히스토리안",
+    "en": "Historian",
+    "category": "데이터",
+    "oneLine": "제조 데이터 수집·정제·표준·활용을 위한 데이터 개념",
+    "example": "예: 히스토리안를 기준으로 현장 데이터를 표준화/자동화하여 지표를 개선",
+    "kpi": [],
+    "confusions": []
+  },
+  {
+    "kr": "데이터 레이블링",
+    "en": "Data Labeling",
+    "category": "데이터",
+    "oneLine": "제조 데이터 수집·정제·표준·활용을 위한 데이터 개념",
+    "example": "예: 데이터 레이블링를 기준으로 현장 데이터를 표준화/자동화하여 지표를 개선",
+    "kpi": [],
+    "confusions": []
+  },
+  {
+    "kr": "학습 데이터셋",
+    "en": "Training Dataset",
+    "category": "데이터",
+    "oneLine": "제조 데이터 수집·정제·표준·활용을 위한 데이터 개념",
+    "example": "예: 학습 데이터셋를 기준으로 현장 데이터를 표준화/자동화하여 지표를 개선",
+    "kpi": [],
+    "confusions": []
+  },
+  {
+    "kr": "검증 데이터셋",
+    "en": "Validation Dataset",
+    "category": "데이터",
+    "oneLine": "제조 데이터 수집·정제·표준·활용을 위한 데이터 개념",
+    "example": "예: 검증 데이터셋를 기준으로 현장 데이터를 표준화/자동화하여 지표를 개선",
+    "kpi": [],
+    "confusions": []
+  },
+  {
+    "kr": "테스트 데이터셋",
+    "en": "Test Dataset",
+    "category": "데이터",
+    "oneLine": "제조 데이터 수집·정제·표준·활용을 위한 데이터 개념",
+    "example": "예: 테스트 데이터셋를 기준으로 현장 데이터를 표준화/자동화하여 지표를 개선",
+    "kpi": [],
+    "confusions": []
+  },
+  {
+    "kr": "모델 정확도",
+    "en": "Accuracy",
+    "category": "성과",
+    "oneLine": "성과 측정과 의사결정에 쓰는 대표 KPI/지표 개념",
+    "example": "예: 모델 정확도 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [],
+    "confusions": []
+  },
+  {
+    "kr": "정밀도/재현율",
+    "en": "Precision/Recall",
+    "category": "성과",
+    "oneLine": "성과 측정과 의사결정에 쓰는 대표 KPI/지표 개념",
+    "example": "예: 정밀도/재현율 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [],
+    "confusions": []
+  },
+  {
+    "kr": "AUC",
+    "en": "AUC",
+    "category": "성과",
+    "oneLine": "성과 측정과 의사결정에 쓰는 대표 KPI/지표 개념",
+    "example": "예: AUC 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [],
+    "confusions": []
+  },
+  {
+    "kr": "혼동행렬",
+    "en": "Confusion Matrix",
+    "category": "AI",
+    "oneLine": "예측/분류/최적화/생성 등 AI 적용을 위한 모델/기법",
+    "example": "예: 혼동행렬 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [
+      "정확도",
+      "리드타임"
+    ],
+    "confusions": []
+  },
+  {
+    "kr": "RAG",
+    "en": "RAG",
+    "category": "AI",
+    "oneLine": "예측/분류/최적화/생성 등 AI 적용을 위한 모델/기법",
+    "example": "예: RAG 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [
+      "정확도",
+      "리드타임"
+    ],
+    "confusions": []
+  },
+  {
+    "kr": "임베딩",
+    "en": "Embedding",
+    "category": "AI",
+    "oneLine": "예측/분류/최적화/생성 등 AI 적용을 위한 모델/기법",
+    "example": "예: 임베딩 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [
+      "정확도",
+      "리드타임"
+    ],
+    "confusions": []
+  },
+  {
+    "kr": "벡터DB",
+    "en": "Vector DB",
+    "category": "데이터",
+    "oneLine": "제조 데이터 수집·정제·표준·활용을 위한 데이터 개념",
+    "example": "예: 벡터DB를 기준으로 현장 데이터를 표준화/자동화하여 지표를 개선",
+    "kpi": [],
+    "confusions": []
+  },
+  {
+    "kr": "프롬프트",
+    "en": "Prompt",
+    "category": "AI",
+    "oneLine": "예측/분류/최적화/생성 등 AI 적용을 위한 모델/기법",
+    "example": "예: 프롬프트 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [
+      "정확도",
+      "리드타임"
+    ],
+    "confusions": []
+  },
+  {
+    "kr": "생성형 AI",
+    "en": "GenAI",
+    "category": "AI",
+    "oneLine": "예측/분류/최적화/생성 등 AI 적용을 위한 모델/기법",
+    "example": "예: 생성형 AI 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [
+      "정확도",
+      "리드타임"
+    ],
+    "confusions": []
+  },
+  {
+    "kr": "대규모 언어모델",
+    "en": "LLM",
+    "category": "AI",
+    "oneLine": "예측/분류/최적화/생성 등 AI 적용을 위한 모델/기법",
+    "example": "예: 대규모 언어모델 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [
+      "정확도",
+      "리드타임"
+    ],
+    "confusions": []
+  },
+  {
+    "kr": "권한관리",
+    "en": "RBAC",
+    "category": "보안",
+    "oneLine": "제조/데이터/AI 운영에서 권한·감사·보호를 위한 보안 개념",
+    "example": "예: 권한관리 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [],
+    "confusions": []
+  },
+  {
+    "kr": "접근통제",
+    "en": "Access Control",
+    "category": "보안",
+    "oneLine": "제조/데이터/AI 운영에서 권한·감사·보호를 위한 보안 개념",
+    "example": "예: 접근통제 적용으로 현장 문제(불량/정지/납기)를 조기에 탐지",
+    "kpi": [],
+    "confusions": []
+  }
+]
