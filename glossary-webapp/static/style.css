@@ -1,38 +1,117 @@
-body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:#0b1220;color:#e8eefc;margin:0}
-.container{max-width:980px;margin:24px auto;padding:0 16px}
-header h1{margin:0 0 6px 0;font-size:28px}
-.sub{margin:0;color:#9bb0d4}
-.search{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:18px 0 8px}
-.search input{flex:1;min-width:240px;padding:12px 12px;border-radius:10px;border:1px solid #22304f;background:#0f1a2f;color:#e8eefc}
-select{padding:12px 12px;border-radius:10px;border:1px solid #22304f;background:#0f1a2f;color:#e8eefc}
-button{padding:12px 14px;border-radius:10px;border:1px solid #2a3b63;background:#1b2c55;color:#e8eefc;cursor:pointer}
-button.secondary{background:#111c33}
+:root{
+  /* HYUNDAI WIA CI (from official CI page) */
+  --wia-blue:#00287A;      /* RGB 0,40,122 */
+  --wia-red:#FF0000;       /* RGB 255,0,0 */
+  --gray-100:#F5F7FA;
+  --gray-200:#E9EDF3;
+  --gray-500:#666666;      /* RGB 102,102,102 */
+  --text:#0b1220;
+  --muted:#5B6B86;
+  --card:#ffffff;
+  --border:#D7DEE9;
+}
+
+*{box-sizing:border-box}
+body{
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  background: linear-gradient(180deg, #ffffff 0%, var(--gray-100) 100%);
+  color: var(--text);
+  margin: 0;
+}
+
+.container{max-width:1020px;margin:26px auto;padding:0 16px}
+
+header{
+  border-top:4px solid var(--wia-blue);
+  padding-top:14px;
+  margin-bottom:14px;
+}
+header h1{margin:0 0 6px 0;font-size:28px;letter-spacing:-0.2px}
+.sub{margin:0;color:var(--muted)}
+
+.search,.uploadRow{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.search{margin:16px 0 10px}
+
+input,select,textarea{
+  border:1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  border-radius:12px;
+}
+
+.search input{flex:1;min-width:240px;padding:12px 12px}
+select{padding:12px 12px}
+
+button{
+  padding:12px 14px;
+  border-radius:12px;
+  border:1px solid var(--wia-blue);
+  background: var(--wia-blue);
+  color:#fff;
+  cursor:pointer;
+  font-weight:600;
+}
+button.secondary{
+  background:#fff;
+  color:var(--wia-blue);
+  border-color:var(--border);
+}
+button.secondary:hover{border-color:var(--wia-blue)}
+button:hover{filter:brightness(1.02)}
 button:disabled{opacity:.5;cursor:not-allowed}
-.hint{margin-top:8px;color:#93a8cf;font-size:12px}
-.toggle{display:flex;gap:8px;align-items:center;color:#cfe0ff;font-size:12px;margin-left:6px;user-select:none}
-.toggle input{accent-color:#3a5290}
-.upload{margin-top:12px}
-.uploadRow{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-.upload input[type="file"]{padding:10px;border:1px solid #22304f;border-radius:10px;background:#0f1a2f;color:#e8eefc}
-.results{margin-top:10px}
-.card{border:1px solid #22304f;background:#0f1a2f;border-radius:12px;padding:12px;margin:10px 0;cursor:pointer}
-.card:hover{border-color:#3a5290}
-.title{font-weight:700}
-.meta{color:#9bb0d4;font-size:12px;margin-top:4px}
-.desc{color:#d7e2ff;margin-top:6px}
-.tag{display:inline-block;font-size:12px;color:#9bb0d4;border:1px solid #22304f;padding:2px 8px;border-radius:999px;margin-left:8px}
-.tag.warn{color:#ffcd7a;border-color:#6b4f1a}
+
+.hint{margin-top:8px;color:var(--muted);font-size:12px}
+.toggle{display:flex;gap:8px;align-items:center;color:var(--muted);font-size:12px;margin-left:6px;user-select:none}
+.toggle input{accent-color:var(--wia-blue)}
+
+.upload{margin-top:14px;background:rgba(255,255,255,.75);border:1px solid var(--border);border-radius:14px;padding:12px}
+.upload input[type="file"]{padding:10px}
+
+.results{margin-top:12px}
+.card{
+  border:1px solid var(--border);
+  background: var(--card);
+  border-radius:14px;
+  padding:14px;
+  margin:10px 0;
+  cursor:pointer;
+  box-shadow: 0 6px 18px rgba(11,18,32,0.06);
+}
+.card:hover{border-color:var(--wia-blue)}
+.title{font-weight:800;letter-spacing:-0.2px}
+.meta{color:var(--muted);font-size:12px;margin-top:4px}
+.desc{color:#1c2a44;margin-top:6px}
+.tag{
+  display:inline-block;
+  font-size:12px;
+  color:var(--wia-blue);
+  border:1px solid rgba(0,40,122,.25);
+  padding:2px 10px;
+  border-radius:999px;
+  margin-left:8px;
+  background: rgba(0,40,122,.06);
+}
+
 .detail{margin-top:14px}
-.panel{border:1px solid #22304f;background:#0f1a2f;border-radius:12px;padding:14px}
-.panelTitle{font-size:18px;font-weight:800;margin-bottom:10px}
-.row{display:grid;grid-template-columns:120px 1fr;gap:10px;padding:8px 0;border-top:1px solid #182544}
+.panel{border:1px solid var(--border);background:var(--card);border-radius:14px;padding:16px;box-shadow: 0 10px 24px rgba(11,18,32,0.08)}
+.panelTitle{font-size:18px;font-weight:900;margin-bottom:10px}
+.row{display:grid;grid-template-columns:140px 1fr;gap:12px;padding:10px 0;border-top:1px solid var(--gray-200)}
 .row:first-of-type{border-top:none}
-.actions{display:flex;gap:8px;justify-content:flex-end;margin-top:10px}
-.edit{margin-top:10px;border-top:1px solid #182544;padding-top:10px}
+
+.actions{display:flex;gap:8px;justify-content:flex-end;margin-top:12px}
+.actions button:first-child{border-color:var(--wia-blue)}
+
+.edit{margin-top:12px;border-top:1px solid var(--gray-200);padding-top:12px}
 .editGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.editGrid label{display:flex;flex-direction:column;gap:6px;color:#cfe0ff;font-size:12px}
-.editGrid input,.editGrid textarea{padding:10px;border-radius:10px;border:1px solid #22304f;background:#0b1220;color:#e8eefc}
+.editGrid label{display:flex;flex-direction:column;gap:6px;color:var(--muted);font-size:12px}
+.editGrid input,.editGrid textarea{padding:10px;border-radius:12px;border:1px solid var(--border);background:#fff}
 .editGrid textarea{resize:vertical}
-.pill{display:inline-block;margin:4px 6px 0 0;padding:2px 10px;border-radius:999px;background:#111c33;border:1px solid #22304f;color:#cfe0ff;font-size:12px}
-.muted{color:#9bb0d4}
+
+.pill{display:inline-block;margin:4px 6px 0 0;padding:2px 10px;border-radius:999px;background:rgba(0,40,122,.06);border:1px solid rgba(0,40,122,.18);color:var(--wia-blue);font-size:12px}
+.muted{color:var(--muted)}
 ul{margin:8px 0 0 18px}
+
+@media (max-width:720px){
+  .row{grid-template-columns:1fr}
+  .editGrid{grid-template-columns:1fr}
+}
