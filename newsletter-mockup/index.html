@@ -9,6 +9,9 @@
 <body>
   <div class="app">
     <header class="topbar">
+      <button class="hamburger" aria-label="메뉴" id="hamburger">
+        <span></span><span></span><span></span>
+      </button>
       <div class="brand">
         <div class="brand-mark">WIA</div>
         <div class="brand-title">
@@ -22,9 +25,14 @@
       </div>
     </header>
 
-    <aside class="sidebar">
+    <!-- floating left drawer -->
+    <aside class="drawer hidden" id="drawer">
+      <div class="drawer-head">
+        <div class="drawer-title">메뉴</div>
+        <button class="drawer-close" id="drawerClose" aria-label="닫기">×</button>
+      </div>
+
       <div class="nav-section">
-        <div class="nav-title">메뉴</div>
         <button class="nav-item active" data-tab="dashboard">대시보드</button>
         <button class="nav-item" data-tab="sources">소스 등록(LinkedIn)</button>
         <button class="nav-item" data-tab="recipients">수신자 관리(CSV)</button>
@@ -32,6 +40,7 @@
         <button class="nav-item" data-tab="schedule">자동발송</button>
         <button class="nav-item" data-tab="logs">발송 로그</button>
       </div>
+
       <div class="nav-section">
         <div class="nav-title">상태</div>
         <div class="pill ok">수집: 정상</div>
@@ -40,7 +49,7 @@
       </div>
     </aside>
 
-    <main class="content">
+    <main class="content content-full">
       <!-- TAB: dashboard -->
       <div class="tab" data-tab-panel="dashboard">
       <section class="grid">
@@ -282,17 +291,45 @@
         (function(){
           const nav = Array.from(document.querySelectorAll('.nav-item[data-tab]'));
           const panels = Array.from(document.querySelectorAll('.tab[data-tab-panel]'));
+          const drawer = document.getElementById('drawer');
+          const burger = document.getElementById('hamburger');
+          const drawerClose = document.getElementById('drawerClose');
+
+          let current = 'dashboard';
+
+          function setDrawer(open){
+            drawer.classList.toggle('hidden', !open);
+          }
 
           function show(tab){
+            current = tab;
             nav.forEach(b => b.classList.toggle('active', b.dataset.tab===tab));
             panels.forEach(p => p.classList.toggle('hidden', p.dataset.tabPanel!==tab));
             window.scrollTo({top:0, behavior:'instant'});
           }
 
-          nav.forEach(b => b.addEventListener('click', () => show(b.dataset.tab)));
+          function toggleDrawer(){
+            const open = drawer.classList.contains('hidden');
+            setDrawer(open);
+          }
+
+          burger.addEventListener('click', toggleDrawer);
+          drawerClose.addEventListener('click', () => setDrawer(false));
+
+          // click menu item: if same tab -> close drawer (toggle behavior), else switch tab and close
+          nav.forEach(b => b.addEventListener('click', () => {
+            const tab = b.dataset.tab;
+            if(tab === current){
+              setDrawer(false);
+              return;
+            }
+            show(tab);
+            setDrawer(false);
+          }));
 
           // initial
           show('dashboard');
+          setDrawer(false);
         })();
       </script>
 
