@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AX News Bot (Mockup)</title>
+  <link rel="stylesheet" href="static/style.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">WIA</div>
+        <div class="brand-title">
+          <div class="kicker">Manufacturing AX Brief</div>
+          <div class="title">뉴스레터 봇 (Mockup)</div>
+        </div>
+      </div>
+      <div class="top-actions">
+        <button class="btn btn-ghost">테스트 발송</button>
+        <button class="btn btn-primary">지금 발송</button>
+      </div>
+    </header>
+
+    <aside class="sidebar">
+      <div class="nav-section">
+        <div class="nav-title">메뉴</div>
+        <button class="nav-item active" data-tab="dashboard">대시보드</button>
+        <button class="nav-item" data-tab="sources">소스 등록(LinkedIn)</button>
+        <button class="nav-item" data-tab="recipients">수신자 관리(CSV)</button>
+        <button class="nav-item" data-tab="newsletter">뉴스레터</button>
+        <button class="nav-item" data-tab="schedule">자동발송</button>
+        <button class="nav-item" data-tab="logs">발송 로그</button>
+      </div>
+      <div class="nav-section">
+        <div class="nav-title">상태</div>
+        <div class="pill ok">수집: 정상</div>
+        <div class="pill warn">LinkedIn: 쿠키 필요</div>
+        <div class="pill ok">메일: SMTP 연결 OK</div>
+      </div>
+    </aside>
+
+    <main class="content">
+      <!-- TAB: dashboard -->
+      <div class="tab" data-tab-panel="dashboard">
+      <section class="grid">
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title">오늘 수집</div>
+            <div class="card-sub">최근 24시간</div>
+          </div>
+          <div class="metric">
+            <div class="metric-big">17</div>
+            <div class="metric-label">신규 글</div>
+          </div>
+          <div class="kv">
+            <div class="kv-row"><span>프로필</span><b>3</b></div>
+            <div class="kv-row"><span>요약 완료</span><b>17</b></div>
+            <div class="kv-row"><span>중복 제거</span><b>5</b></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title">수신자</div>
+            <div class="card-sub">활성 사용자 기준</div>
+          </div>
+          <div class="metric">
+            <div class="metric-big">42</div>
+            <div class="metric-label">명</div>
+          </div>
+          <div class="kv">
+            <div class="kv-row"><span>태그</span><b>AX, DX, OT</b></div>
+            <div class="kv-row"><span>최근 발송</span><b>08:00 KST</b></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title">자동발송</div>
+            <div class="card-sub">스케줄러</div>
+          </div>
+          <div class="toggle">
+            <div class="toggle-label">ON</div>
+            <div class="toggle-switch on"><div class="knob"></div></div>
+          </div>
+          <div class="kv">
+            <div class="kv-row"><span>시간</span><b>08:00 KST</b></div>
+            <div class="kv-row"><span>주말 제외</span><b>예</b></div>
+          </div>
+        </div>
+      </section>
+      </div>
+
+      <!-- TAB: newsletter -->
+      <div class="tab hidden" data-tab-panel="newsletter">
+      <section class="card wide">
+        <div class="card-head">
+          <div>
+            <div class="card-title">오늘의 뉴스레터 미리보기</div>
+            <div class="card-sub">메일(HTML)과 동일한 카드 레이아웃</div>
+          </div>
+          <div class="right">
+            <button class="btn btn-ghost">초안 재생성</button>
+            <button class="btn btn-primary">발송</button>
+          </div>
+        </div>
+
+        <div class="section-title">
+          <span class="icon">🔎</span>
+          <span>AI 트렌드 (LinkedIn)</span>
+          <span class="badge">17</span>
+        </div>
+
+        <div class="feed">
+          <article class="item">
+            <div class="thumb"></div>
+            <div class="item-body">
+              <div class="item-title">MS, 첫 로보틱스 모델 ‘로-알파’ 공개… 센싱·양손 조작 VLA 보강</div>
+              <div class="item-meta">minlingchan · 2시간 전 · LinkedIn</div>
+              <ul class="item-bullets">
+                <li>로봇 기반 작업 수행을 위해 비전-언어-행동(VLA) 계열 접근 강화</li>
+                <li>합성 데이터/시뮬 기반 학습 파이프라인이 핵심 경쟁요소로 부상</li>
+                <li><b>시사점:</b> 제조 현장 적용은 데이터 오너십 + 표준화된 업무 프로세스가 전제</li>
+              </ul>
+              <div class="item-actions">
+                <a class="link" href="#">원문 보기</a>
+                <a class="link" href="#">요약 수정</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="item">
+            <div class="thumb alt"></div>
+            <div class="item-body">
+              <div class="item-title">구글, CT·MRI 읽는 AI ‘메드젬마 1.5’ / 음성인식 ‘MedASR’ 공개</div>
+              <div class="item-meta">beret21 · 5시간 전 · LinkedIn</div>
+              <ul class="item-bullets">
+                <li>의료 영상/음성 영역에서 멀티모달 모델의 상용 적용이 가속</li>
+                <li><b>시사점:</b> 제조에서는 비전검사/작업자 음성 기록에 유사한 패턴 적용 가능</li>
+              </ul>
+              <div class="item-actions">
+                <a class="link" href="#">원문 보기</a>
+                <a class="link" href="#">태그 추가</a>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="section-title ceo">
+          <span class="icon">⚑</span>
+          <span>시사점 (ROI + 실행체계)</span>
+        </div>
+
+        <div class="ceo-box">
+          <div class="ceo-cols">
+            <div>
+              <div class="h">Top 5</div>
+              <ol>
+                <li>현장 데이터 소스(설비/품질/물류) Owner와 KPI 정합성부터 확정</li>
+                <li>비전/로봇 PoC는 ‘업무표준+변경관리’ 계획이 없으면 확장 실패</li>
+                <li>합성데이터/시뮬은 비용 절감 레버리지—내재화 vs 파트너 판단 필요</li>
+                <li>보안/규정(OT망) 전제 조건을 초기 설계에 반영</li>
+                <li>12주 내 ROI 검증 가능한 과제(불량/납기/가동률)부터 선택</li>
+              </ol>
+            </div>
+            <div>
+              <div class="h">점검 질문 10개 (예)</div>
+              <ul>
+                <li>ROI 산정 기준(원가/리드타임/OEE)은 무엇인가?</li>
+                <li>데이터 품질/라벨링 비용은 누가 부담하고 어떻게 운영되는가?</li>
+                <li>현장 적용 시 작업표준/권한/책임(Owner)은 누구인가?</li>
+                <li>OT 보안/망 분리/접근통제는 어떻게 해결하는가?</li>
+                <li>확장(다른 라인/공장) 시 병목은 무엇인가?</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+      </section>
+      </div>
+
+      <!-- TAB: sources + recipients -->
+      <div class="tab hidden" data-tab-panel="sources">
+      <section class="grid">
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <div class="card-title">LinkedIn 프로필 등록</div>
+              <div class="card-sub">특정 프로필만 하루 1회 수집</div>
+            </div>
+            <button class="btn btn-primary">+ 추가</button>
+          </div>
+          <div class="table">
+            <div class="tr head"><div>이름</div><div>URL</div><div>활성</div><div>마지막 수집</div></div>
+            <div class="tr"><div>HMGICS 임원</div><div class="mono">linkedin.com/in/minlingchan</div><div><span class="dot on"></span></div><div>오늘 07:55</div></div>
+            <div class="tr"><div>AX 컨설턴트</div><div class="mono">linkedin.com/in/beret21</div><div><span class="dot on"></span></div><div>오늘 07:55</div></div>
+            <div class="tr"><div>LS일렉트릭 현업</div><div class="mono">linkedin.com/in/giho-lee-...</div><div><span class="dot off"></span></div><div>-</div></div>
+          </div>
+        </div>
+
+        <!-- recipients moved to its own tab -->
+      </section>
+      </div>
+
+      <!-- TAB: recipients -->
+      <div class="tab hidden" data-tab-panel="recipients">
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <div class="card-title">수신자 관리</div>
+              <div class="card-sub">CSV 업로드/단건 등록</div>
+            </div>
+            <div class="right">
+              <button class="btn btn-ghost">CSV 업로드</button>
+              <button class="btn btn-primary">+ 단건 추가</button>
+            </div>
+          </div>
+          <div class="table">
+            <div class="tr head"><div>이름</div><div>이메일</div><div>태그</div><div>활성</div></div>
+            <div class="tr"><div>Ryan Shim</div><div class="mono">ryan@company.com</div><div>AX, DX</div><div><span class="dot on"></span></div></div>
+            <div class="tr"><div>Team AX</div><div class="mono">ax-team@company.com</div><div>AX</div><div><span class="dot on"></span></div></div>
+            <div class="tr"><div>OT Security</div><div class="mono">ot-sec@company.com</div><div>OT</div><div><span class="dot on"></span></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: schedule -->
+      <div class="tab hidden" data-tab-panel="schedule">
+      <section class="card wide">
+        <div class="card-head">
+          <div>
+            <div class="card-title">자동발송 설정</div>
+            <div class="card-sub">SMTP(Outlook/Exchange) 인증: 아이디/비번</div>
+          </div>
+        </div>
+        <div class="form">
+          <div class="field">
+            <label>스케줄</label>
+            <div class="row">
+              <div class="toggle-switch on"><div class="knob"></div></div>
+              <div class="hint">매일 08:00 (KST) 자동 발송</div>
+            </div>
+          </div>
+          <div class="field">
+            <label>발송 시간</label>
+            <div class="row">
+              <input class="input" value="08:00" />
+              <select class="input"><option>KST</option><option>UTC</option></select>
+              <label class="check"><input type="checkbox" checked /> 주말 제외</label>
+            </div>
+          </div>
+          <div class="field">
+            <label>SMTP 설정(.env/secret)</label>
+            <div class="hint mono">SMTP_HOST / SMTP_PORT / SMTP_USER / SMTP_PASS / SMTP_FROM</div>
+          </div>
+        </div>
+      </section>
+      </div>
+
+      <!-- TAB: logs -->
+      <div class="tab hidden" data-tab-panel="logs">
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <div class="card-title">발송 로그</div>
+              <div class="card-sub">자동발송/수동발송 이력</div>
+            </div>
+          </div>
+          <div class="table">
+            <div class="tr head"><div>시간</div><div>대상</div><div>결과</div><div>비고</div></div>
+            <div class="tr"><div>오늘 08:00</div><div class="mono">42 recipients</div><div><span class="dot on"></span> 성공</div><div class="mono">newsletter_20260204</div></div>
+            <div class="tr"><div>어제 08:00</div><div class="mono">40 recipients</div><div><span class="dot on"></span> 성공</div><div class="mono">newsletter_20260203</div></div>
+            <div class="tr"><div>2일 전 08:00</div><div class="mono">39 recipients</div><div><span class="dot off"></span> 실패</div><div class="mono">SMTP_AUTH_FAILED</div></div>
+          </div>
+        </div>
+      </div>
+
+      <script>
+        (function(){
+          const nav = Array.from(document.querySelectorAll('.nav-item[data-tab]'));
+          const panels = Array.from(document.querySelectorAll('.tab[data-tab-panel]'));
+
+          function show(tab){
+            nav.forEach(b => b.classList.toggle('active', b.dataset.tab===tab));
+            panels.forEach(p => p.classList.toggle('hidden', p.dataset.tabPanel!==tab));
+            window.scrollTo({top:0, behavior:'instant'});
+          }
+
+          nav.forEach(b => b.addEventListener('click', () => show(b.dataset.tab)));
+
+          // initial
+          show('dashboard');
+        })();
+      </script>
+
+    </main>
+  </div>
+</body>
+</html>
