@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AX News Bot (Mockup) - App</title>
+  <link rel="stylesheet" href="static/style.css" />
+  <style>
+    .user-pill{display:flex;gap:10px;align-items:center}
+    .avatar{width:34px;height:34px;border-radius:12px;background:linear-gradient(135deg,#dbeafe,#eef2ff);border:1px solid var(--border)}
+    .who{display:flex;flex-direction:column;line-height:1.1}
+    .who b{font-size:12px}
+    .who span{font-size:12px;color:var(--muted)}
+    .btn-danger{background:var(--wia-red);border-color:var(--wia-red);color:#fff}
+    .btn-danger:hover{filter:brightness(1.05)}
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div class="brand">
+          <div class="brand-mark">WIA</div>
+          <div class="brand-title">
+            <div class="kicker">Manufacturing AX Brief</div>
+            <div class="title">뉴스레터 봇</div>
+          </div>
+        </div>
+      </div>
+      <div class="top-actions">
+        <div class="user-pill">
+          <div class="avatar"></div>
+          <div class="who">
+            <b>Admin</b>
+            <span>kmshim@hyundai-wia.com</span>
+          </div>
+        </div>
+        <button class="btn btn-ghost">로그아웃</button>
+      </div>
+    </header>
+
+    <aside class="drawer hidden" id="drawer">
+      <div class="drawer-head">
+        <div class="drawer-title">메뉴</div>
+        <button class="drawer-close" id="drawerClose" aria-label="닫기">×</button>
+      </div>
+      <div class="nav-section">
+        <button class="nav-item active" data-tab="dashboard">대시보드</button>
+        <button class="nav-item" data-tab="newsletter">뉴스레터</button>
+        <button class="nav-item" data-tab="sources">소스 등록</button>
+        <button class="nav-item" data-tab="keywords">키워드 룰(가장중요/중요/보통)</button>
+        <button class="nav-item" data-tab="schedule">자동발송</button>
+        <button class="nav-item" data-tab="logs">발송 로그</button>
+        <button class="nav-item" data-tab="admin">관리자</button>
+      </div>
+      <div class="nav-section">
+        <div class="nav-title">상태</div>
+        <div class="pill ok">수집: 정상</div>
+        <div class="pill warn">LinkedIn: 쿠키 필요</div>
+        <div class="pill ok">메일: SMTP 연결 OK</div>
+      </div>
+    </aside>
+
+    <main class="content content-full">
+      <div class="tab" data-tab-panel="dashboard">
+        <section class="grid">
+          <div class="card">
+            <div class="card-head">
+              <div class="card-title">오늘 수집</div>
+              <div class="card-sub">최근 24시간</div>
+            </div>
+            <div class="metric">
+              <div class="metric-big">17</div>
+              <div class="metric-label">신규 글</div>
+            </div>
+            <div class="kv">
+              <div class="kv-row"><span>소스</span><b>LinkedIn · YouTube · AI타임즈 · RSS</b></div>
+              <div class="kv-row"><span>요약 완료</span><b>17</b></div>
+              <div class="kv-row"><span>추천(자동선정)</span><b>8</b></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-head">
+              <div class="card-title">발송</div>
+              <div class="card-sub">개인화 프로필 기준</div>
+            </div>
+            <div class="kv">
+              <div class="kv-row"><span>제목 템플릿</span><b>[AX Brief] {date} Top Picks</b></div>
+              <div class="kv-row"><span>다음 자동발송</span><b>내일 08:00 KST</b></div>
+              <div class="kv-row"><span>수신자</span><b>42</b></div>
+            </div>
+            <div style="margin-top:12px;display:flex;gap:10px;justify-content:flex-end">
+              <button class="btn btn-ghost">테스트 발송</button>
+              <button class="btn btn-primary">지금 발송</button>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-head">
+              <div class="card-title">보안 상태</div>
+              <div class="card-sub">정책 요약</div>
+            </div>
+            <div class="kv">
+              <div class="kv-row"><span>로그인 실패 제한</span><b>5회</b></div>
+              <div class="kv-row"><span>잠금 해제</span><b>임시비번(숫자 6자리) 이메일</b></div>
+              <div class="kv-row"><span>비밀번호 저장</span><b>해시(Argon2/bcrypt)</b></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="card wide">
+          <div class="card-head">
+            <div>
+              <div class="card-title">시스템 알림</div>
+              <div class="card-sub">최초 관리자 bootstrap</div>
+            </div>
+          </div>
+          <div class="ceo-box" style="background:#f0fff4;border:1px dashed #c7f9cc">
+            <div style="font-weight:900;margin-bottom:6px">초기 관리자 생성됨</div>
+            <div class="hint">admin: <span class="mono">kmshim@hyundai-wia.com</span> · 임시비밀번호를 SMTP로 발송하도록 설정됨(첫 구동 시)</div>
+          </div>
+        </section>
+      </div>
+
+      <div class="tab hidden" data-tab-panel="admin">
+        <section class="card wide">
+          <div class="card-head">
+            <div>
+              <div class="card-title">관리자</div>
+              <div class="card-sub">사용자 관리 / 잠금 해제 / 임시비번 발급</div>
+            </div>
+            <div class="right">
+              <button class="btn btn-primary">+ 사용자 추가</button>
+            </div>
+          </div>
+          <div class="table">
+            <div class="tr head"><div>이메일(아이디)</div><div>역할</div><div>상태</div><div>액션</div></div>
+            <div class="tr"><div class="mono">kmshim@hyundai-wia.com</div><div>admin</div><div><span class="dot on"></span> 활성</div><div><button class="btn btn-ghost">비번 재설정</button></div></div>
+            <div class="tr"><div class="mono">ryan@company.com</div><div>user</div><div><span class="dot off"></span> 잠금</div><div style="display:flex;gap:8px;justify-content:flex-end"><button class="btn btn-ghost">잠금 해제</button><button class="btn btn-danger">임시비번 발송</button></div></div>
+          </div>
+        </section>
+      </div>
+
+      <div class="tab hidden" data-tab-panel="newsletter"><div class="card"><div class="card-title">뉴스레터(생략)</div><div class="card-sub">여기에 Draft/Recommended 편집 UI</div></div></div>
+      <div class="tab hidden" data-tab-panel="sources"><div class="card"><div class="card-title">소스 등록(생략)</div><div class="card-sub">LinkedIn/YouTube/RSS/뉴스사이트 등록</div></div></div>
+      <div class="tab hidden" data-tab-panel="keywords"><div class="card"><div class="card-title">키워드 룰(생략)</div><div class="card-sub">가장중요/중요/보통/제외 입력</div></div></div>
+      <div class="tab hidden" data-tab-panel="schedule"><div class="card"><div class="card-title">자동발송(생략)</div><div class="card-sub">주기/시간/평일/주간/월간 설정</div></div></div>
+      <div class="tab hidden" data-tab-panel="logs"><div class="card"><div class="card-title">발송 로그(생략)</div><div class="card-sub">자동/수동 발송 결과</div></div></div>
+
+      <script>
+        (function(){
+          const nav = Array.from(document.querySelectorAll('.nav-item[data-tab]'));
+          const panels = Array.from(document.querySelectorAll('.tab[data-tab-panel]'));
+          const drawer = document.getElementById('drawer');
+          const drawerClose = document.getElementById('drawerClose');
+
+          // desktop keeps drawer visible
+          function setDrawer(open){
+            drawer.classList.toggle('hidden', !open);
+          }
+
+          let current = 'dashboard';
+          function show(tab){
+            current = tab;
+            nav.forEach(b => b.classList.toggle('active', b.dataset.tab===tab));
+            panels.forEach(p => p.classList.toggle('hidden', p.dataset.tabPanel!==tab));
+            window.scrollTo({top:0, behavior:'instant'});
+          }
+
+          drawerClose.addEventListener('click', () => setDrawer(false));
+          nav.forEach(b => b.addEventListener('click', () => {
+            const tab = b.dataset.tab;
+            if(tab !== current) show(tab);
+            // on mobile, close drawer after click
+            if(window.matchMedia('(max-width:1100px)').matches) setDrawer(false);
+          }));
+
+          // initial
+          show('dashboard');
+          setDrawer(true);
+        })();
+      </script>
+
+    </main>
+  </div>
+</body>
+</html>
