@@ -6,58 +6,112 @@
   <title>AX News Bot - Auth (Mockup)</title>
   <link rel="stylesheet" href="static/style.css" />
   <style>
-    body{background:linear-gradient(180deg,#f5f7fb,#eef2ff)}
-    .auth-wrap{max-width:980px;margin:34px auto;padding:0 18px;display:grid;grid-template-columns:1.05fr .95fr;gap:16px}
-    .hero{background:#fff;border:1px solid var(--border);border-radius:18px;padding:22px;box-shadow:0 10px 30px rgba(0,0,0,.06)}
-    .hero h1{margin:0 0 6px;font-size:22px}
-    .hero p{margin:0;color:var(--muted);line-height:1.5}
-    .hero .chips{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
-    .chip{padding:8px 10px;border-radius:999px;border:1px solid #dbe3ff;background:#eef2ff;color:var(--wia-blue);font-weight:800;font-size:12px}
+    /* Desktop-first split layout */
+    body{background:#0b1020}
+    .split{min-height:100vh;display:grid;grid-template-columns:1.25fr .95fr}
+    .left{
+      position:relative;
+      background:radial-gradient(1200px 700px at 20% 10%, rgba(0,40,122,.35), transparent 55%),
+                 radial-gradient(900px 600px at 60% 60%, rgba(255,0,0,.10), transparent 55%),
+                 linear-gradient(180deg, #0b1020, #0c1633);
+      color:#fff;
+      padding:56px 56px 40px;
+    }
+    .left::after{
+      content:"";
+      position:absolute; inset:0;
+      background-image:linear-gradient(transparent 92%, rgba(255,255,255,.04) 92%),
+                       linear-gradient(90deg, transparent 92%, rgba(255,255,255,.04) 92%);
+      background-size:48px 48px;
+      opacity:.25;
+      pointer-events:none;
+      mask-image:radial-gradient(circle at 25% 30%, black 0%, transparent 65%);
+    }
 
-    .panel{background:#fff;border:1px solid var(--border);border-radius:18px;padding:18px;box-shadow:0 10px 30px rgba(0,0,0,.06)}
-    .panel-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
-    .panel-title{font-weight:900}
+    .hero{
+      max-width:720px;
+      position:relative;
+      z-index:1;
+    }
+    .hero-top{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+    .logo{
+      width:54px;height:54px;border-radius:16px;
+      background:var(--wia-blue);
+      display:flex;align-items:center;justify-content:center;
+      font-weight:900;letter-spacing:.5px
+    }
+    .product{font-weight:900;font-size:18px;margin:0}
+    .tagline{margin:4px 0 0;color:rgba(255,255,255,.72);font-weight:700}
+    .hero h1{margin:18px 0 10px;font-size:42px;letter-spacing:-.5px;line-height:1.05}
+    .hero p{margin:0;color:rgba(255,255,255,.74);line-height:1.6;font-size:15px;max-width:640px}
+
+    .chips{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+    .chip{padding:9px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);color:#fff;font-weight:900;font-size:12px}
+
+    .right{
+      background:linear-gradient(180deg,#f7f8ff,#eef2ff);
+      display:flex;align-items:center;justify-content:center;
+      padding:40px 28px;
+    }
+    .panel{
+      width:min(440px, 100%);
+      background:#fff;
+      border:1px solid var(--border);
+      border-radius:20px;
+      padding:22px;
+      box-shadow:0 22px 70px rgba(2,6,23,.18);
+    }
+    .panel-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px;gap:10px}
+    .panel-title{font-weight:1000;font-size:18px}
     .panel-sub{font-size:12px;color:var(--muted)}
     .auth-tabs{display:flex;gap:8px}
     .auth-tabs button{border:1px solid var(--border);background:#fff;border-radius:999px;padding:8px 10px;font-weight:900;cursor:pointer}
     .auth-tabs button.active{background:var(--wia-blue);border-color:var(--wia-blue);color:#fff}
 
-    .auth-form{display:grid;gap:10px}
+    .auth-form{display:grid;gap:10px;margin-top:6px}
     .auth-form .input{width:100%}
-    .auth-actions{display:flex;gap:10px;justify-content:flex-end;align-items:center;margin-top:4px}
+    .auth-actions{display:flex;gap:10px;justify-content:flex-end;align-items:center;margin-top:6px}
     .small-link{color:var(--wia-blue);font-weight:900;text-decoration:none;font-size:12px}
 
-    .notice{border-left:4px solid var(--wia-red);background:#fff7f7;border:1px dashed #ffb4b4;border-radius:14px;padding:10px 12px;color:#991b1b;font-weight:800;font-size:12px;line-height:1.4}
+    .notice{border-left:4px solid var(--wia-red);background:#fff7f7;border:1px dashed #ffb4b4;border-radius:14px;padding:10px 12px;color:#991b1b;font-weight:900;font-size:12px;line-height:1.4}
 
     @media (max-width: 980px){
-      .auth-wrap{grid-template-columns:1fr}
+      body{background:linear-gradient(180deg,#f5f7fb,#eef2ff)}
+      .split{grid-template-columns:1fr}
+      .left{padding:34px 18px;background:linear-gradient(180deg,#0b1020,#0c1633)}
+      .hero h1{font-size:28px}
     }
   </style>
 </head>
 <body>
-  <div class="auth-wrap">
-    <div class="hero">
-      <div class="brand" style="margin-bottom:10px">
-        <div class="brand-mark">WIA</div>
-        <div class="brand-title">
-          <div class="kicker">Manufacturing AX Brief</div>
-          <div class="title">뉴스레터 봇 (Auth Mockup)</div>
+  <div class="split">
+    <section class="left">
+      <div class="hero">
+        <div class="hero-top">
+          <div class="logo">WIA</div>
+          <div>
+            <div class="product">Manufacturing AX Brief</div>
+            <div class="tagline">Personalized newsletter · curated daily</div>
+          </div>
+        </div>
+
+        <h1>개인화 뉴스레터</h1>
+        <p>
+          사용자별 소스/키워드/발송주기/제목을 관리하고, 자동 선정(Recommended) + 수동 편집(Draft) 후 발송합니다.
+          비밀번호는 해시로 저장되며, 로그인 실패 5회 시 잠금됩니다.
+        </p>
+
+        <div class="chips">
+          <div class="chip">ID = 이메일</div>
+          <div class="chip">실패 5회 잠금</div>
+          <div class="chip">임시비번(숫자 6자리)</div>
+          <div class="chip">SMTP(Outlook/Exchange)</div>
         </div>
       </div>
-      <h1>개인화 뉴스레터</h1>
-      <p>
-        사용자별 소스/키워드/발송주기/제목을 관리하고, 자동 선정(Recommended) + 수동 편집(Draft) 후 발송합니다.
-        비밀번호는 해시로 저장되며, 로그인 실패 5회 시 잠금됩니다.
-      </p>
-      <div class="chips">
-        <div class="chip">ID = 이메일</div>
-        <div class="chip">실패 5회 잠금</div>
-        <div class="chip">임시비번(숫자 6자리)</div>
-        <div class="chip">SMTP(Outlook/Exchange)</div>
-      </div>
-    </div>
+    </section>
 
-    <div class="panel">
+    <section class="right">
+      <div class="panel">
       <div class="panel-head">
         <div>
           <div class="panel-title">로그인</div>
@@ -110,7 +164,8 @@
       <div class="divider" style="margin:14px 0"></div>
       <div class="hint mono">정책: 실패 5회 잠금 / 자동해제 없음 / 임시비번 30분 유효(1회용) / 로그인 후 비번 변경 강제</div>
 
-    </div>
+      </div>
+    </section>
   </div>
 
   <script>
