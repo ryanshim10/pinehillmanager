@@ -46,7 +46,8 @@ body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,
 
 .drawer.collapsed{width:76px !important}
 .drawer.collapsed .drawer-title{display:none}
-.drawer.collapsed .nav-item{justify-content:center}
+.drawer.collapsed .nav-item{justify-content:center;gap:0;padding-left:0;padding-right:0}
+.drawer.collapsed .nav-item .ico{margin:0 auto}
 .drawer.collapsed .nav-item .label{display:none}
 .drawer.collapsed .pill{display:none}
 .drawer.collapsed .nav-title{display:none}
