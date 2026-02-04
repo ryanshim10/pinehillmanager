@@ -42,16 +42,17 @@
     <aside class="drawer hidden" id="drawer">
       <div class="drawer-head">
         <div class="drawer-title">메뉴</div>
+        <button class="drawer-collapse" id="drawerCollapse" aria-label="접기/펼치기">⟨⟩</button>
         <button class="drawer-close" id="drawerClose" aria-label="닫기">×</button>
       </div>
       <div class="nav-section">
-        <button class="nav-item active" data-tab="dashboard">대시보드</button>
-        <button class="nav-item" data-tab="newsletter">뉴스레터</button>
-        <button class="nav-item" data-tab="sources">소스 등록</button>
-        <button class="nav-item" data-tab="keywords">키워드 룰(가장중요/중요/보통)</button>
-        <button class="nav-item" data-tab="schedule">자동발송</button>
-        <button class="nav-item" data-tab="logs">발송 로그</button>
-        <button class="nav-item" data-tab="admin">관리자</button>
+        <button class="nav-item active" data-tab="dashboard"><span class="ico">🏠</span><span class="label">대시보드</span></button>
+        <button class="nav-item" data-tab="newsletter"><span class="ico">📰</span><span class="label">뉴스레터</span></button>
+        <button class="nav-item" data-tab="sources"><span class="ico">🔗</span><span class="label">소스 등록</span></button>
+        <button class="nav-item" data-tab="keywords"><span class="ico">🎯</span><span class="label">키워드 룰</span></button>
+        <button class="nav-item" data-tab="schedule"><span class="ico">⏱</span><span class="label">자동발송</span></button>
+        <button class="nav-item" data-tab="logs"><span class="ico">📒</span><span class="label">발송 로그</span></button>
+        <button class="nav-item" data-tab="admin"><span class="ico">🛡</span><span class="label">관리자</span></button>
       </div>
       <div class="nav-section">
         <div class="nav-title">상태</div>
@@ -152,10 +153,16 @@
           const panels = Array.from(document.querySelectorAll('.tab[data-tab-panel]'));
           const drawer = document.getElementById('drawer');
           const drawerClose = document.getElementById('drawerClose');
+          const drawerCollapse = document.getElementById('drawerCollapse');
 
           // desktop keeps drawer visible
           function setDrawer(open){
             drawer.classList.toggle('hidden', !open);
+          }
+
+          function setCollapsed(collapsed){
+            drawer.classList.toggle('collapsed', !!collapsed);
+            try{ localStorage.setItem('drawer_collapsed', collapsed ? '1' : '0'); }catch(e){}
           }
 
           let current = 'dashboard';
@@ -167,6 +174,7 @@
           }
 
           drawerClose.addEventListener('click', () => setDrawer(false));
+          drawerCollapse.addEventListener('click', () => setCollapsed(!drawer.classList.contains('collapsed')));
           nav.forEach(b => b.addEventListener('click', () => {
             const tab = b.dataset.tab;
             if(tab !== current) show(tab);
@@ -177,6 +185,7 @@
           // initial
           show('dashboard');
           setDrawer(true);
+          try{ setCollapsed(localStorage.getItem('drawer_collapsed') === '1'); }catch(e){}
         })();
       </script>
 
