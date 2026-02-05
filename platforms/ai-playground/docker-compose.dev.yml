@@ -1,0 +1,9 @@
+services:
+  api:
+    environment:
+      - AUTH_MODE=dev
+      - DEV_LOGINID=dev
+      - DEV_EMPID=00000000
+  ui:
+    environment:
+      - API_BASE_URL=http://api:8001

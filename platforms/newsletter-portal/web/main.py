@@ -48,6 +48,10 @@ DATABASE_URL = os.environ["DATABASE_URL"]
 SESSION_SECRET = os.environ.get("SESSION_SECRET", "")
 BOOTSTRAP_ADMIN_EMAIL = os.environ.get("BOOTSTRAP_ADMIN_EMAIL", "")
 
+# Auth mode
+AUTH_MODE = os.environ.get("AUTH_MODE", "sso")  # sso|dev
+DEV_EMAIL = os.environ.get("DEV_EMAIL", "dev@local")
+
 # SSO (Provisioning 기반) 설정
 SSO_HEADER_EMPID = os.environ.get("SSO_HEADER_EMPID", "X-SSO-EMPID")
 SSO_ALLOWED_COMPANY_CODE = os.environ.get("SSO_ALLOWED_COMPANY_CODE", "1000")  # 현대위아
@@ -74,10 +78,24 @@ def _require_user(
     creds: Optional[HTTPAuthorizationCredentials] = Depends(security),
     session: Session = Depends(get_session),
 ) -> User:
-    """Require authenticated user"""
+    """Require authenticated user
+
+    AUTH_MODE=dev 인 경우:
+    - Authorization 없이도 DEV_EMAIL로 자동 로그인(기능 테스트용)
+    """
+
+    if AUTH_MODE == "dev" and not creds:
+        user = session.exec(select(User).where(User.email == DEV_EMAIL)).first()
+        if not user:
+            user = User(email=DEV_EMAIL, role=UserRole.ADMIN, enabled=True, password_hash="")
+            session.add(user)
+            session.commit()
+            session.refresh(user)
+        return user
+
     if not creds:
         raise HTTPException(status_code=401, detail="인증이 필요합니다")
-    
+
     email = parse_token(creds.credentials)
     if not email:
         raise HTTPException(status_code=401, detail="유효하지 않은 토큰입니다")
@@ -218,6 +236,16 @@ def sso_login(
     - Portal User가 없으면 자동 생성
     - 토큰 발급
     """
+
+    if AUTH_MODE == "dev":
+        # dev에서는 SSO 없이 바로 DEV_EMAIL로 토큰 발급
+        user = session.exec(select(User).where(User.email == DEV_EMAIL)).first()
+        if not user:
+            user = User(email=DEV_EMAIL, role=UserRole.ADMIN, enabled=True, password_hash="")
+            session.add(user)
+            session.commit()
+            session.refresh(user)
+        return LoginResponse(token=create_token(user), role=user.role, email=user.email)
 
     empid = request.headers.get(SSO_HEADER_EMPID)
     if not empid:

@@ -8,6 +8,10 @@ from sqlmodel import SQLModel, Field, Session, create_engine, select
 
 app = FastAPI(title="AI Playground API", version="0.1.0")
 
+AUTH_MODE = os.getenv("AUTH_MODE", "sso")  # sso|dev
+DEV_LOGINID = os.getenv("DEV_LOGINID", "dev")
+DEV_EMPID = os.getenv("DEV_EMPID", "00000000")
+
 SSO_HEADER_EMPID = os.getenv("SSO_HEADER_EMPID", "X-SSO-EMPID")
 SSO_HEADER_LOGINID = os.getenv("SSO_HEADER_LOGINID", "X-SSO-LOGINID")
 DATABASE_URL = os.getenv("DATABASE_URL", "")
@@ -32,6 +36,10 @@ class RunRequest(BaseModel):
 
 
 def _get_user(empid: Optional[str], loginid: Optional[str]) -> dict:
+    # dev 모드: 무인증으로 고정 사용자
+    if AUTH_MODE == "dev":
+        return {"loginid": DEV_LOGINID, "empid": DEV_EMPID}
+
     # 1) 로그인ID 헤더가 있으면 그걸 최우선 사용
     if loginid:
         return {"loginid": loginid, "empid": empid}
