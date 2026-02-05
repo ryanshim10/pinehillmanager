@@ -1,10 +1,43 @@
 services:
   api:
+    build: ./api
+    ports:
+      - "8001:8001"
     environment:
       - AUTH_MODE=dev
       - DEV_BOOTSTRAP_EMAIL=dev@local
       - DEV_BOOTSTRAP_PASSWORD=devpass
       - DATABASE_URL=sqlite:///./playground.db
+      - RUNNER_BASE_URL=http://runner:8000
+    volumes:
+      - ./data:/app/data
+      - ./uploads:/app/uploads
+    depends_on:
+      - runner
+
   ui:
+    build: ./ui
+    ports:
+      - "8501:8501"
     environment:
       - API_BASE_URL=http://api:8001
+    depends_on:
+      - api
+
+  runner:
+    build: ./runner
+    ports:
+      - "8000:8000"
+      - "9000-9100:9000-9100"
+    environment:
+      - PORT_START=9000
+      - PORT_END=9100
+      - MAX_APPS=50
+      - IDLE_TIMEOUT=3600
+      - UPLOADS_DIR=/app/uploads
+    volumes:
+      - ./uploads:/app/uploads
+      - runner_tmp:/tmp/runner
+
+volumes:
+  runner_tmp:

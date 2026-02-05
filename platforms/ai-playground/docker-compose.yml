@@ -11,6 +11,13 @@ services:
       - SSO_HEADER_LOGINID=${SSO_HEADER_LOGINID:-X-SSO-LOGINID}
       - SSO_ALLOWED_COMPANY_CODE=${SSO_ALLOWED_COMPANY_CODE:-1000}
       - DATABASE_URL=${DATABASE_URL:-sqlite:///./playground.db}
+      - RUNNER_BASE_URL=http://runner:8000
+    volumes:
+      - ./data:/app/data
+      - ./uploads:/app/uploads
+    depends_on:
+      - runner
+
   ui:
     build: ./ui
     ports:
@@ -19,3 +26,22 @@ services:
       - API_BASE_URL=http://api:8001
     depends_on:
       - api
+
+  runner:
+    build: ./runner
+    ports:
+      - "8000:8000"
+      - "9000-9100:9000-9100"
+    environment:
+      - PORT_START=${RUNNER_PORT_START:-9000}
+      - PORT_END=${RUNNER_PORT_END:-9100}
+      - MAX_APPS=${RUNNER_MAX_APPS:-50}
+      - IDLE_TIMEOUT=${RUNNER_IDLE_TIMEOUT:-3600}
+      - UPLOADS_DIR=/app/uploads
+    volumes:
+      - ./uploads:/app/uploads
+      - runner_tmp:/tmp/runner
+    privileged: true  # For container isolation (optional)
+
+volumes:
+  runner_tmp:
