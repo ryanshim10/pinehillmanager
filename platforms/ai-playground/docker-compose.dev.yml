@@ -2,8 +2,9 @@ services:
   api:
     environment:
       - AUTH_MODE=dev
-      - DEV_LOGINID=dev
-      - DEV_EMPID=00000000
+      - DEV_BOOTSTRAP_EMAIL=dev@local
+      - DEV_BOOTSTRAP_PASSWORD=devpass
+      - DATABASE_URL=sqlite:///./playground.db
   ui:
     environment:
       - API_BASE_URL=http://api:8001

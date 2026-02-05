@@ -5,12 +5,12 @@ services:
       - "8001:8001"
     environment:
       - AUTH_MODE=${AUTH_MODE:-sso}
-      - DEV_LOGINID=${DEV_LOGINID:-dev}
-      - DEV_EMPID=${DEV_EMPID:-00000000}
+      - DEV_BOOTSTRAP_EMAIL=${DEV_BOOTSTRAP_EMAIL:-dev@local}
+      - DEV_BOOTSTRAP_PASSWORD=${DEV_BOOTSTRAP_PASSWORD:-devpass}
       - SSO_HEADER_EMPID=${SSO_HEADER_EMPID:-X-SSO-EMPID}
       - SSO_HEADER_LOGINID=${SSO_HEADER_LOGINID:-X-SSO-LOGINID}
       - SSO_ALLOWED_COMPANY_CODE=${SSO_ALLOWED_COMPANY_CODE:-1000}
-      - DATABASE_URL=${DATABASE_URL:-}
+      - DATABASE_URL=${DATABASE_URL:-sqlite:///./playground.db}
   ui:
     build: ./ui
     ports:

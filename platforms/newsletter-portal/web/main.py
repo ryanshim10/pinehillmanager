@@ -50,7 +50,8 @@ BOOTSTRAP_ADMIN_EMAIL = os.environ.get("BOOTSTRAP_ADMIN_EMAIL", "")
 
 # Auth mode
 AUTH_MODE = os.environ.get("AUTH_MODE", "sso")  # sso|dev
-DEV_EMAIL = os.environ.get("DEV_EMAIL", "dev@local")
+DEV_BOOTSTRAP_EMAIL = os.environ.get("DEV_BOOTSTRAP_EMAIL", "dev@local")
+DEV_BOOTSTRAP_PASSWORD = os.environ.get("DEV_BOOTSTRAP_PASSWORD", "devpass")
 
 # SSO (Provisioning 기반) 설정
 SSO_HEADER_EMPID = os.environ.get("SSO_HEADER_EMPID", "X-SSO-EMPID")
@@ -80,18 +81,9 @@ def _require_user(
 ) -> User:
     """Require authenticated user
 
-    AUTH_MODE=dev 인 경우:
-    - Authorization 없이도 DEV_EMAIL로 자동 로그인(기능 테스트용)
+    dev 모드에서도 기본은 **email/password 로그인으로 토큰을 발급**받아 사용.
+    (자동 우회 로그인 없음)
     """
-
-    if AUTH_MODE == "dev" and not creds:
-        user = session.exec(select(User).where(User.email == DEV_EMAIL)).first()
-        if not user:
-            user = User(email=DEV_EMAIL, role=UserRole.ADMIN, enabled=True, password_hash="")
-            session.add(user)
-            session.commit()
-            session.refresh(user)
-        return user
 
     if not creds:
         raise HTTPException(status_code=401, detail="인증이 필요합니다")
@@ -161,9 +153,23 @@ def _bootstrap_admin(session: Session):
 def on_startup():
     """Initialize on startup"""
     init_db(engine)
-    
+
     with Session(engine) as session:
         _bootstrap_admin(session)
+
+        # dev 모드: SMTP 없이도 바로 로그인 테스트 가능하도록 로컬 계정 생성
+        if AUTH_MODE == "dev" and DEV_BOOTSTRAP_EMAIL:
+            u = session.exec(select(User).where(User.email == DEV_BOOTSTRAP_EMAIL)).first()
+            if not u:
+                u = User(
+                    email=DEV_BOOTSTRAP_EMAIL,
+                    role=UserRole.ADMIN,
+                    enabled=True,
+                    password_hash=hash_password(DEV_BOOTSTRAP_PASSWORD),
+                )
+                session.add(u)
+                session.commit()
+                logger.info(f"Created dev bootstrap user: {DEV_BOOTSTRAP_EMAIL}")
 
 
 # ============== Auth Routes ==============
@@ -238,14 +244,7 @@ def sso_login(
     """
 
     if AUTH_MODE == "dev":
-        # dev에서는 SSO 없이 바로 DEV_EMAIL로 토큰 발급
-        user = session.exec(select(User).where(User.email == DEV_EMAIL)).first()
-        if not user:
-            user = User(email=DEV_EMAIL, role=UserRole.ADMIN, enabled=True, password_hash="")
-            session.add(user)
-            session.commit()
-            session.refresh(user)
-        return LoginResponse(token=create_token(user), role=user.role, email=user.email)
+        raise HTTPException(status_code=404, detail="dev 모드에서는 /auth/sso 를 사용하지 않습니다. /auth/login 으로 테스트하세요.")
 
     empid = request.headers.get(SSO_HEADER_EMPID)
     if not empid:

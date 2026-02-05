@@ -2,10 +2,12 @@ services:
   web:
     environment:
       AUTH_MODE: dev
-      DEV_EMAIL: dev@local
+      DEV_BOOTSTRAP_EMAIL: dev@local
+      DEV_BOOTSTRAP_PASSWORD: devpass
     ports:
       - "8088:8088"
   worker:
     environment:
       AUTH_MODE: dev
-      DEV_EMAIL: dev@local
+      DEV_BOOTSTRAP_EMAIL: dev@local
+      DEV_BOOTSTRAP_PASSWORD: devpass
