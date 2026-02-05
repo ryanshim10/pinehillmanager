@@ -39,6 +39,32 @@ class SendStatus(str, Enum):
     ERROR = "error"
 
 
+# ============== Provisioned Directory Models (IAM → Portal DB) ==============
+
+class IFOrgUser(SQLModel, table=True):
+    """IAM 프로비저닝 사용자 테이블 (샘플: IF_ORG_USER)
+
+    최소한 사번(code) → loginid/email 매핑에 사용.
+    """
+
+    __tablename__ = "if_org_user"
+
+    # IAM ORG_USER.code (사번)
+    code: str = Field(primary_key=True, index=True)
+
+    # IAM ORG_USER.loginid (로그인 ID)
+    loginid: Optional[str] = Field(default=None, index=True)
+
+    email: Optional[str] = Field(default=None, index=True)
+    name: Optional[str] = Field(default=None)
+
+    # 회사코드(현대위아=1000) 필터링에 사용 가능
+    company_code: Optional[str] = Field(default=None, index=True)
+
+    # 동기화 시각
+    if_dttm: Optional[datetime] = Field(default_factory=datetime.utcnow)
+
+
 # ============== User Models ==============
 
 class User(SQLModel, table=True):

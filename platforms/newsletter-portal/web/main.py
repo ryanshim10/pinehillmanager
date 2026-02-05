@@ -3,7 +3,7 @@ import logging
 from datetime import datetime
 from typing import Optional, List
 
-from fastapi import FastAPI, Depends, HTTPException, Query, Body
+from fastapi import FastAPI, Depends, HTTPException, Query, Body, Request
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, EmailStr
@@ -11,6 +11,7 @@ from sqlmodel import Session, select, func
 
 from shared.db import make_engine, init_db
 from shared.models import (
+    IFOrgUser,
     User, TempPassword, Source, Keyword, Item, Newsletter, SendLog, Schedule,
     UserRole, SourceType, KeywordBucket, NewsletterStatus
 )
@@ -46,6 +47,10 @@ app.add_middleware(
 DATABASE_URL = os.environ["DATABASE_URL"]
 SESSION_SECRET = os.environ.get("SESSION_SECRET", "")
 BOOTSTRAP_ADMIN_EMAIL = os.environ.get("BOOTSTRAP_ADMIN_EMAIL", "")
+
+# SSO (Provisioning 기반) 설정
+SSO_HEADER_EMPID = os.environ.get("SSO_HEADER_EMPID", "X-SSO-EMPID")
+SSO_ALLOWED_COMPANY_CODE = os.environ.get("SSO_ALLOWED_COMPANY_CODE", "1000")  # 현대위아
 
 # Database engine
 engine = make_engine(DATABASE_URL)
@@ -197,6 +202,60 @@ def login(
     )
 
 
+@app.post("/auth/sso", response_model=LoginResponse)
+def sso_login(
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """사내 SSO 로그인 (프로비저닝 테이블 기반)
+
+    전제:
+    - 프록시/게이트웨이가 인증을 끝낸 뒤
+    - 사번을 헤더로 내려줌 (기본: X-SSO-EMPID)
+
+    동작:
+    - IF_ORG_USER(code=사번)에서 email/loginid 조회
+    - Portal User가 없으면 자동 생성
+    - 토큰 발급
+    """
+
+    empid = request.headers.get(SSO_HEADER_EMPID)
+    if not empid:
+        raise HTTPException(status_code=401, detail=f"Missing SSO header: {SSO_HEADER_EMPID}")
+
+    # Provisioning 테이블 조회
+    directory_user = session.get(IFOrgUser, empid)
+    if not directory_user:
+        raise HTTPException(status_code=403, detail="사번이 디렉토리(IF_ORG_USER)에 없습니다")
+
+    # 회사코드 필터 (현대위아=1000)
+    if directory_user.company_code and SSO_ALLOWED_COMPANY_CODE:
+        if directory_user.company_code != SSO_ALLOWED_COMPANY_CODE:
+            raise HTTPException(status_code=403, detail="허용되지 않은 회사코드 사용자입니다")
+
+    if not directory_user.email:
+        raise HTTPException(status_code=403, detail="디렉토리 사용자에 email 정보가 없습니다")
+
+    # Portal User upsert
+    user = session.exec(select(User).where(User.email == directory_user.email)).first()
+    if not user:
+        user = User(
+            email=directory_user.email,
+            role=UserRole.USER,
+            enabled=True,
+            password_hash="",
+        )
+        session.add(user)
+        session.commit()
+        session.refresh(user)
+    else:
+        # 디렉토리에 있고 비활성인 경우는 운영 정책에 따라 막는다
+        if not user.enabled:
+            raise HTTPException(status_code=403, detail="비활성화된 계정입니다")
+
+    return LoginResponse(token=create_token(user), role=user.role, email=user.email)
+
+
 @app.post("/auth/request-temp-password")
 def request_temp_password(
     email: str = Body(..., embed=True),
@@ -342,7 +401,7 @@ def get_user(
         "email": user.email,
         "role": user.role,
         "enabled": user.enabled,
-        "locked_at": u.locked_at,
+        "locked_at": user.locked_at,
         "failed_login_count": user.failed_login_count,
         "created_at": user.created_at,
         "updated_at": user.updated_at

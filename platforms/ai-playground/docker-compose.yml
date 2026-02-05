@@ -6,6 +6,8 @@ services:
     environment:
       - SSO_HEADER_EMPID=${SSO_HEADER_EMPID:-X-SSO-EMPID}
       - SSO_HEADER_LOGINID=${SSO_HEADER_LOGINID:-X-SSO-LOGINID}
+      - SSO_ALLOWED_COMPANY_CODE=${SSO_ALLOWED_COMPANY_CODE:-1000}
+      - DATABASE_URL=${DATABASE_URL:-}
   ui:
     build: ./ui
     ports:
