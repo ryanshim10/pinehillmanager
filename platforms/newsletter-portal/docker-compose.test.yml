@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  test_db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: newsletter_test
+      POSTGRES_USER: newsletter
+      POSTGRES_PASSWORD: test_password
+    tmpfs:
+      - /var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    networks:
+      - test-network
+
+  test_runner:
+    build:
+      context: .
+      dockerfile: tests/Dockerfile
+    environment:
+      DATABASE_URL: postgresql+psycopg2://newsletter:test_password@test_db:5432/newsletter_test
+      SESSION_SECRET: test-secret-key
+      BOOTSTRAP_ADMIN_EMAIL: admin@example.com
+      SMTP_HOST: mailhog
+      SMTP_PORT: 1025
+      SMTP_STARTTLS: "false"
+      SMTP_SSL: "false"
+      SMTP_FROM: test@example.com
+      PYTHONPATH: /app
+    depends_on:
+      - test_db
+      - mailhog
+    networks:
+      - test-network
+    command: >
+      sh -c "
+        echo 'Waiting for database...' &&
+        sleep 3 &&
+        cd /app &&
+        python -m pytest tests/ -v --tb=short --cov=shared --cov=web --cov-report=term-missing
+      "
+
+  mailhog:
+    image: mailhog/mailhog:latest
+    ports:
+      - "8026:8025"
+      - "1026:1025"
+    networks:
+      - test-network
+
+networks:
+  test-network:
+    driver: bridge

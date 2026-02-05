@@ -1,0 +1,12 @@
+# Test configuration for pytest
+pytest==7.4.4
+pytest-asyncio==0.23.3
+httpx==0.26.0
+pytest-cov==4.1.0
+
+# Use same versions as main app
+fastapi==0.109.0
+pydantic==2.5.3
+pydantic[email]==2.5.3
+sqlmodel==0.0.14
+passlib[bcrypt]==1.7.4
