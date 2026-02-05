@@ -1,6 +1,6 @@
 app:
   title: 현대위아 AI playground
-  baseUrl: http://localhost:3000
+  baseUrl: http://141.164.39.156:3000
 
 organization:
   name: 현대위아
@@ -12,7 +12,7 @@ backend:
   # auth:
   #   keys:
   #     - secret: ${BACKEND_SECRET}
-  baseUrl: http://localhost:7007
+  baseUrl: http://141.164.39.156:7007
   listen:
     port: 7007
     # Uncomment the following host directive to bind to specific interfaces
@@ -22,7 +22,7 @@ backend:
     # Content-Security-Policy directives follow the Helmet format: https://helmetjs.github.io/#reference
     # Default Helmet Content-Security-Policy values can be removed by setting the key to false
   cors:
-    origin: http://localhost:3000
+    origin: http://141.164.39.156:3000
     methods: [GET, HEAD, PATCH, POST, PUT, DELETE]
     credentials: true
   # This is for local development only, it is not recommended to use this in production
@@ -81,6 +81,14 @@ catalog:
     # Local example data, file locations are relative to the backend process, typically `packages/backend`
     - type: file
       target: ../../examples/entities.yaml
+
+    # HyundaiWia AI Playground entities
+    - type: file
+      target: ./catalog-info-hyundaiwia-ai-playground.yaml
+    - type: file
+      target: ./catalog-info-claudecodeui.yaml
+    - type: file
+      target: ./catalog-info-ai-playground-runtime.yaml
 
     # Local example template
     - type: file

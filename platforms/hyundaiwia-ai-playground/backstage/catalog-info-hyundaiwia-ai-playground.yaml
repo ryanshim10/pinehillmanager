@@ -1,0 +1,8 @@
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: hyundaiwia-ai-playground
+  title: 현대위아 AI playground
+  description: 현업용 AI 앱 포탈 (Backstage + ClaudeCodeUI + 실행 런타임)
+spec:
+  owner: group:default/guests

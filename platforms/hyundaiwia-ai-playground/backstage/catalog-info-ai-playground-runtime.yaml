@@ -1,0 +1,15 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: ai-playground-runtime
+  title: AI Playground Runtime
+  description: 업로드 앱 실행/공유/관리 런타임
+  links:
+    - url: http://141.164.39.156:8501
+      title: Open AI Playground
+      icon: dashboard
+spec:
+  type: service
+  lifecycle: experimental
+  owner: group:default/guests
+  system: hyundaiwia-ai-playground

@@ -1,0 +1,15 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: claudecodeui
+  title: Claude Code UI
+  description: 바이브코딩 워크스페이스 (새 탭으로 실행)
+  links:
+    - url: http://141.164.39.156:5173
+      title: Open Claude Code UI
+      icon: dashboard
+spec:
+  type: service
+  lifecycle: experimental
+  owner: group:default/guests
+  system: hyundaiwia-ai-playground
