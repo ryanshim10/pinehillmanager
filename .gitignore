@@ -1,0 +1,49 @@
+# OS / editors
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+
+# Env files
+.env
+.env.*
+
+# Temp / outputs
+tmp/
+*.tmp
+*.log
+
+# OpenClaw local memory (personal)
+memory/
+
+# Scrape/results artifacts
+bizinfo_results*.json
+motie_*.json
+smartfactory_*.json
+
+# Local clones / embedded repos (treat as separate projects)
+AI_dictionary_repo/
+LLMagent/
+shimplex/
+
+# Captured media (too big for git)
+shared/youtube_captures/
+shared/youtube_live_capture/
+
+# Archives / binaries (add back if you really want them in git)
+*.zip
+*.7z
