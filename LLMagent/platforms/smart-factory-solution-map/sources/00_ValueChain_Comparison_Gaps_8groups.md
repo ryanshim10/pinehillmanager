@@ -19,6 +19,10 @@
 ---
 
 ## 1) HD현대
+**누가 수행(현재 MD 근거 기준)**
+- 내부: HD현대로보틱스(H!Factory/HI FACTORY), HD현대건설기계(울산 스마트팩토리)
+- 외부/파트너: Palantir(빅데이터 플랫폼 MOU, HD Hyundai ERC), Dassault Systèmes(버추얼 트윈 MOU 기사), KT(5G/ICT 협력 기사)
+
 **들어간 것(근거 있음)**
 - 수집: RTLS 성격의 ‘제품 실시간 위치추적’, 로봇 상태 실시간 감시/예지(HI FACTORY)
 - 저장·통합: H!Factory(설비 연결·데이터 취합·분석·관리 + ERP/MES 연동) 서술
@@ -34,6 +38,10 @@
 ---
 
 ## 2) 두산그룹
+**누가 수행(현재 MD 근거 기준)**
+- 내부: Doosan Infracore(협력사 MES 지원 프로그램), Doosan Digital Innovation(그룹 DT/보안 파트너십 언급)
+- 외부/파트너: Claroty(OT security), Phosphorus(xIoT security)
+
 **들어간 것(근거 있음)**
 - 수집: 설비 센서 부착 → 데이터 수집(IoT)
 - 분석·AI: 수집 데이터 분석을 통한 공정 최적화(목표/서술)
@@ -48,6 +56,10 @@
 ---
 
 ## 3) 현대자동차그룹
+**누가 수행(현재 MD 근거 기준)**
+- 내부: 현대오토에버(Smart Factory/SFaaS), HMGICS 운영 주체(그룹)
+- 외부/파트너: NVIDIA(AI Factory/Omniverse), Unity(Meta-Factory MOU)
+
 **들어간 것(근거 있음)**
 - 저장·통합: HMGICS에서 MES를 통합 플랫폼으로 설명(표준화 데이터 통합/관리)
 - 실행·제어: 로봇 통합 가속(Omniverse 기반 서술)
@@ -62,6 +74,10 @@
 ---
 
 ## 4) 삼성(삼성SDS 중심)
+**누가 수행(현재 MD 근거 기준)**
+- 내부: 삼성SDS(Nexplant/Brightics/Factory Solutions)
+- 외부/파트너: (현재 MD에 특정 파트너 실명 근거 부족)
+
 **들어간 것(근거 있음)**
 - 수집: IoT로 센서 데이터 수집
 - 분석·AI: Brightics 기반 분석 + ML 기반 원인요인 자동 식별(서술)
@@ -76,6 +92,10 @@
 ---
 
 ## 5) LG
+**누가 수행(현재 MD 근거 기준)**
+- 내부: LG전자(스마트파크), 생산기술원 PSI(스마트팩토리 외판/CoE), LG CNS(MES/MMD/WMS)
+- 외부/파트너: (WEF 등대공장 근거는 있으나, SI/클라우드 벤더 실명은 현재 MD에서 제한적)
+
 **들어간 것(근거 있음)**
 - 수집: 생산/공정 데이터 실시간 수집(서술)
 - 저장·통합: MMD(마스터데이터) 통합/관리, MES, WMS 구성(서술)
@@ -91,6 +111,10 @@
 ---
 
 ## 6) SK
+**누가 수행(현재 MD 근거 기준)**
+- 내부: SK Group(Manufacturing AI Cloud/AI Factory 발표), SK Telecom(운영 언급), SK hynix(적용/확장 대상 언급), SK AX(제조 DX 소개)
+- 외부/파트너: NVIDIA(Manufacturing AI Cloud/A.I. Factory 관련 파트너)
+
 **들어간 것(근거 있음)**
 - (인프라/플랫폼 관점) Manufacturing AI Cloud, AI Factory(50,000+ GPU) 등 ‘제조 AI 인프라’ 구축/제공 서술
 
@@ -101,6 +125,10 @@
 ---
 
 ## 7) 포스코
+**누가 수행(현재 MD 근거 기준)**
+- 내부: POSCO DX(스마트팩토리/디지털트윈/운영), POSCO(포항/광양 등 적용 사례 언급)
+- 외부/파트너: AWS(제조 AX 협력)
+
 **들어간 것(근거 있음)**
 - 수집: Sensing(IoT)로 현장 데이터 실시간 수집(포스코DX)
 - 분석·AI: Big Data 기반 분석(Data-Driven)
@@ -115,6 +143,10 @@
 ---
 
 ## 8) LS그룹(LS ELECTRIC)
+**누가 수행(현재 MD 근거 기준)**
+- 내부: LS ELECTRIC(청주 등대공장/EMS 언급)
+- 외부/파트너: Microsoft + Sight Machine(에너지/데이터 최적화 고객사례)
+
 **들어간 것(근거 있음)**
 - 수집: IIoT 기반 설비 모델 변경/현장 데이터
 - 분석·AI: AI/머신러닝 기반 자동 용접/검사(서술)
