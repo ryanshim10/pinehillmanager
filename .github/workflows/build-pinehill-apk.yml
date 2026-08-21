@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - build/apk-20260822
+  pull_request:
+    branches:
+      - master
   workflow_dispatch:
 
 jobs:
