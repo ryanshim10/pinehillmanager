@@ -18,40 +18,40 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.ryan.pinehill.data.model.Unit
+import com.ryan.pinehill.data.model.Unit as RentalUnit
 import com.ryan.pinehill.data.model.UnitStatus
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UnitsScreen(
     viewModel: UnitsViewModel = androidx.lifecycle.viewmodel.compose.viewModel(),
-    onUnitClick: (Unit) -> Unit = {}
+    onUnitClick: (RentalUnit) -> kotlin.Unit = {}
 ) {
     val units by viewModel.units.collectAsStateWithLifecycle()
     var searchQuery by remember { mutableStateOf("") }
     var selectedStatus by remember { mutableStateOf<UnitStatus?>(null) }
-    
+
     val filteredUnits = units.filter { unit ->
-        val matchesSearch = searchQuery.isEmpty() || 
+        val matchesSearch = searchQuery.isEmpty() ||
             unit.unitId.contains(searchQuery, ignoreCase = true) ||
             unit.roomNo.toString().contains(searchQuery)
         val matchesStatus = selectedStatus == null || unit.status == selectedStatus
         matchesSearch && matchesStatus
     }
-    
+
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text("세대 현황") },
                 actions = {
-                    IconButton(onClick = { /* 검색 */ }) {
+                    IconButton(onClick = { }) {
                         Icon(Icons.Default.Search, contentDescription = "검색")
                     }
                 }
             )
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = { /* 추가 */ }) {
+            FloatingActionButton(onClick = { }) {
                 Icon(Icons.Default.Add, contentDescription = "추가")
             }
         }
@@ -61,16 +61,11 @@ fun UnitsScreen(
                 .fillMaxSize()
                 .padding(padding)
         ) {
-            // 통계 카드
             UnitStatsCard(units = units)
-            
-            // 필터 칩
             StatusFilterChips(
                 selectedStatus = selectedStatus,
                 onStatusSelected = { selectedStatus = it }
             )
-            
-            // 검색창
             OutlinedTextField(
                 value = searchQuery,
                 onValueChange = { searchQuery = it },
@@ -81,8 +76,6 @@ fun UnitsScreen(
                 leadingIcon = { Icon(Icons.Default.Search, null) },
                 singleLine = true
             )
-            
-            // 세대 리스트
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
                 contentPadding = PaddingValues(16.dp),
@@ -100,13 +93,13 @@ fun UnitsScreen(
 }
 
 @Composable
-fun UnitStatsCard(units: List<Unit>) {
+fun UnitStatsCard(units: List<RentalUnit>) {
     val total = units.size
     val rented = units.count { it.status == UnitStatus.RENTED }
     val vacant = units.count { it.status == UnitStatus.VACANT }
     val maintenance = units.count { it.status == UnitStatus.MAINTENANCE }
     val lawsuit = units.count { it.status == UnitStatus.LAWSUIT }
-    
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -115,9 +108,7 @@ fun UnitStatsCard(units: List<Unit>) {
             containerColor = MaterialTheme.colorScheme.primaryContainer
         )
     ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
+        Column(modifier = Modifier.padding(16.dp)) {
             Text(
                 text = "총 $total 세대",
                 fontSize = 20.sp,
@@ -150,10 +141,11 @@ fun StatItem(label: String, count: Int, color: Color) {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StatusFilterChips(
     selectedStatus: UnitStatus?,
-    onStatusSelected: (UnitStatus?) -> Unit
+    onStatusSelected: (UnitStatus?) -> kotlin.Unit
 ) {
     Row(
         modifier = Modifier
@@ -186,8 +178,8 @@ fun StatusFilterChips(
 
 @Composable
 fun UnitCard(
-    unit: Unit,
-    onClick: () -> Unit
+    unit: RentalUnit,
+    onClick: () -> kotlin.Unit
 ) {
     val statusColor = when (unit.status) {
         UnitStatus.RENTED -> Color(0xFF4CAF50)
@@ -196,7 +188,7 @@ fun UnitCard(
         UnitStatus.LAWSUIT -> Color(0xFFF44336)
         UnitStatus.OTHER -> Color(0xFF607D8B)
     }
-    
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -209,7 +201,6 @@ fun UnitCard(
                 .padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // 호실 번호
             Box(
                 modifier = Modifier
                     .size(56.dp)
@@ -226,10 +217,9 @@ fun UnitCard(
                     color = statusColor
                 )
             }
-            
+
             Spacer(modifier = Modifier.width(16.dp))
-            
-            // 정보
+
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = unit.unitId,
@@ -249,8 +239,7 @@ fun UnitCard(
                     )
                 }
             }
-            
-            // 상태 뱃지
+
             Box(
                 modifier = Modifier
                     .background(
