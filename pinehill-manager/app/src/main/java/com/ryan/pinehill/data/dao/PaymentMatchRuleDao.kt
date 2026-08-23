@@ -15,6 +15,9 @@ interface PaymentMatchRuleDao {
     @Query("SELECT * FROM payment_match_rules ORDER BY ruleId")
     suspend fun getAllRulesNow(): List<PaymentMatchRule>
 
+    @Query("SELECT * FROM payment_match_rules WHERE bankName = :bankName AND senderName = :senderName AND amount = :amount AND dayOfMonth = :dayOfMonth LIMIT 1")
+    suspend fun findSameKey(bankName: String, senderName: String, amount: Long, dayOfMonth: Int): PaymentMatchRule?
+
     @Query("DELETE FROM payment_match_rules WHERE bankName = :bankName AND senderName = :senderName AND amount = :amount AND dayOfMonth = :dayOfMonth")
     suspend fun deleteSameKey(bankName: String, senderName: String, amount: Long, dayOfMonth: Int)
 
