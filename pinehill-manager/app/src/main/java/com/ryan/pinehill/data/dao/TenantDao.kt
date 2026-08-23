@@ -8,16 +8,22 @@ import kotlinx.coroutines.flow.Flow
 interface TenantDao {
     @Query("SELECT * FROM tenants WHERE unitId = :unitId")
     fun getTenantsByUnit(unitId: String): Flow<List<Tenant>>
-    
+
+    @Query("SELECT * FROM tenants ORDER BY tenantKey")
+    suspend fun getAllTenantsNow(): List<Tenant>
+
     @Query("SELECT * FROM tenants WHERE tenantKey = :tenantKey")
     suspend fun getTenantByKey(tenantKey: String): Tenant?
-    
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTenant(tenant: Tenant)
-    
-    @Update
-    suspend fun updateTenant(tenant: Tenant)
-    
-    @Delete
-    suspend fun deleteTenant(tenant: Tenant)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertTenants(tenants: List<Tenant>)
+
+    @Update suspend fun updateTenant(tenant: Tenant)
+    @Delete suspend fun deleteTenant(tenant: Tenant)
+
+    @Query("DELETE FROM tenants")
+    suspend fun deleteAll()
 }
