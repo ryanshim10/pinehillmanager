@@ -6,81 +6,70 @@ import android.content.Intent
 import android.provider.Telephony
 import android.util.Log
 import com.ryan.pinehill.data.AppDatabase
-import com.ryan.pinehill.data.model.Expense
-import com.ryan.pinehill.data.model.ExpenseCategory
-import com.ryan.pinehill.data.model.ExpenseSource
-import com.ryan.pinehill.data.model.Payment
-import com.ryan.pinehill.data.model.PaymentSource
-import com.ryan.pinehill.data.model.PaymentStatus
+import com.ryan.pinehill.data.model.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.*
 
 class SmsReceiver : BroadcastReceiver() {
-    
-    companion object {
-        const val TAG = "SmsReceiver"
-    }
-    
+    companion object { const val TAG = "SmsReceiver" }
+
     override fun onReceive(context: Context, intent: Intent) {
-        if (intent.action == Telephony.Sms.Intents.SMS_RECEIVED_ACTION) {
-            val messages = Telephony.Sms.Intents.getMessagesFromIntent(intent)
-            
-            messages?.forEach { sms ->
-                val sender = sms.displayOriginatingAddress
-                val body = sms.displayMessageBody
-                
-                Log.d(TAG, "SMS from: $sender, body: $body")
-                
-                // 카카오뱅크 문자만 처리
-                if (sender?.contains("카카오뱅크") == true || body.contains("[카카오뱅크]")) {
-                    processKakaoBankSms(context, body)
-                }
-            }
+        if (intent.action != Telephony.Sms.Intents.SMS_RECEIVED_ACTION) return
+        Telephony.Sms.Intents.getMessagesFromIntent(intent)?.forEach { sms ->
+            processBankSms(context, sms.displayMessageBody, sms.displayOriginatingAddress, sms.timestampMillis)
         }
     }
-    
-    private fun processKakaoBankSms(context: Context, text: String) {
+
+    private fun processBankSms(context: Context, text: String, address: String?, receivedAt: Long) {
         val database = AppDatabase.getDatabase(context)
-        val paymentDao = database.paymentDao()
-        val expenseDao = database.expenseDao()
-        
         CoroutineScope(Dispatchers.IO).launch {
-            // 입금 파싱 시도
-            val parsedPayment = SmsParser.parseDepositSms(text)
+            if (database.paymentDao().countSmsByRawText(text) > 0) return@launch
+
+            val parsedPayment = SmsParser.parseDepositSms(text, address)
             if (parsedPayment != null) {
-                val payment = Payment(
-                    tenantKey = null,  // 미확정
-                    unitId = "",       // 미확정
-                    month = SmsParser.getMonthString(parsedPayment.dateStr),
-                    paidAt = SmsParser.parseToTimestamp(parsedPayment.dateStr, parsedPayment.timeStr),
-                    amount = parsedPayment.amount,
-                    senderName = parsedPayment.senderName,
-                    source = PaymentSource.SMS,
-                    status = PaymentStatus.PENDING,
-                    rawSms = text
+                val day = SmsParser.dayOfMonth(receivedAt)
+                val sender = SmsParser.normalizeName(parsedPayment.senderName)
+                val rule = database.paymentMatchRuleDao().getEnabledRulesNow().firstOrNull {
+                    it.bankName == parsedPayment.bankName &&
+                        SmsParser.normalizeName(it.senderName) == sender &&
+                        it.amount == parsedPayment.amount &&
+                        it.dayOfMonth == day
+                }
+                val month = SimpleDateFormat("yyyy-MM", Locale.KOREA).format(Date(receivedAt))
+                database.paymentDao().insertPayment(
+                    Payment(
+                        tenantKey = null,
+                        unitId = rule?.unitId.orEmpty(),
+                        month = month,
+                        paidAt = receivedAt,
+                        amount = parsedPayment.amount,
+                        senderName = parsedPayment.senderName,
+                        source = PaymentSource.SMS,
+                        status = if (rule != null) PaymentStatus.PAID else PaymentStatus.PENDING,
+                        statusOverride = rule != null,
+                        rawSms = text
+                    )
                 )
-                paymentDao.insertPayment(payment)
-                Log.d(TAG, "Payment inserted: ${payment.amount}")
+                Log.d(TAG, "Bank deposit ${parsedPayment.bankName} ${parsedPayment.amount}, autoMatch=${rule?.unitId}")
                 return@launch
             }
-            
-            // 출금 파싱 시도
-            val parsedExpense = SmsParser.parseWithdrawalSms(text)
-            if (parsedExpense != null) {
-                val expense = Expense(
-                    spentAt = SmsParser.parseToTimestamp(parsedExpense.dateStr, parsedExpense.timeStr),
+
+            val parsedExpense = SmsParser.parseWithdrawalSms(text, address) ?: return@launch
+            database.expenseDao().insertExpense(
+                Expense(
+                    spentAt = receivedAt,
                     amount = parsedExpense.amount,
-                    category = ExpenseCategory.OTHER,  // 공용지출 기본
-                    memo = parsedExpense.memo ?: "",
-                    unitId = null,  // 공용
-                    month = SmsParser.getMonthString(parsedExpense.dateStr),
+                    category = ExpenseCategory.OTHER,
+                    memo = parsedExpense.memo.orEmpty(),
+                    unitId = null,
+                    month = SimpleDateFormat("yyyy-MM", Locale.KOREA).format(Date(receivedAt)),
                     source = ExpenseSource.SMS,
                     rawSms = text
                 )
-                expenseDao.insertExpense(expense)
-                Log.d(TAG, "Expense inserted: ${expense.amount}")
-            }
+            )
         }
     }
 }
