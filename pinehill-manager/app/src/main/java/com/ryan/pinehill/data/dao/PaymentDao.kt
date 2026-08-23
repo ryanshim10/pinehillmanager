@@ -8,25 +8,46 @@ import kotlinx.coroutines.flow.Flow
 interface PaymentDao {
     @Query("SELECT * FROM payments WHERE unitId = :unitId AND month = :month")
     fun getPaymentsByUnitAndMonth(unitId: String, month: String): Flow<List<Payment>>
-    
+
     @Query("SELECT * FROM payments WHERE month = :month ORDER BY unitId")
     fun getPaymentsByMonth(month: String): Flow<List<Payment>>
-    
-    @Query("SELECT * FROM payments WHERE status = 'PENDING' ORDER BY createdAt DESC")
+
+    @Query("SELECT * FROM payments ORDER BY paidAt DESC, createdAt DESC")
+    fun getAllPayments(): Flow<List<Payment>>
+
+    @Query("SELECT * FROM payments WHERE status = 'PENDING' ORDER BY paidAt DESC, createdAt DESC")
     fun getPendingPayments(): Flow<List<Payment>>
-    
+
+    @Query("SELECT * FROM payments WHERE status = 'PENDING' ORDER BY paidAt DESC, createdAt DESC")
+    suspend fun getPendingPaymentsNow(): List<Payment>
+
+    @Query("SELECT * FROM payments WHERE unitId = :unitId AND paidAt >= :since AND status IN ('PAID', 'PARTIAL') ORDER BY paidAt DESC, createdAt DESC")
+    fun getMatchedPaymentsByUnitSince(unitId: String, since: Long): Flow<List<Payment>>
+
+    @Query("SELECT * FROM payments ORDER BY paymentId")
+    suspend fun getAllPaymentsNow(): List<Payment>
+
     @Query("SELECT SUM(amount) FROM payments WHERE unitId = :unitId AND month = :month AND status IN ('PAID', 'PARTIAL')")
     suspend fun getTotalPaidByUnitAndMonth(unitId: String, month: String): Long?
-    
+
+    @Query("SELECT COUNT(*) FROM payments WHERE source = 'SMS' AND rawSms = :rawSms")
+    suspend fun countSmsByRawText(rawSms: String): Int
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertPayment(payment: Payment): Long
-    
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertPayments(payments: List<Payment>)
+
     @Update
     suspend fun updatePayment(payment: Payment)
-    
+
     @Delete
     suspend fun deletePayment(payment: Payment)
-    
+
+    @Query("DELETE FROM payments")
+    suspend fun deleteAll()
+
     @Query("SELECT DISTINCT month FROM payments ORDER BY month DESC")
     fun getAvailableMonths(): Flow<List<String>>
 }
