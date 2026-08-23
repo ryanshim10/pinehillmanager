@@ -15,6 +15,9 @@ interface PaymentDao {
     @Query("SELECT * FROM payments WHERE status = 'PENDING' ORDER BY paidAt DESC, createdAt DESC")
     fun getPendingPayments(): Flow<List<Payment>>
 
+    @Query("SELECT * FROM payments WHERE unitId = :unitId AND paidAt >= :since AND status IN ('PAID', 'PARTIAL') ORDER BY paidAt DESC, createdAt DESC")
+    fun getMatchedPaymentsByUnitSince(unitId: String, since: Long): Flow<List<Payment>>
+
     @Query("SELECT SUM(amount) FROM payments WHERE unitId = :unitId AND month = :month AND status IN ('PAID', 'PARTIAL')")
     suspend fun getTotalPaidByUnitAndMonth(unitId: String, month: String): Long?
 
