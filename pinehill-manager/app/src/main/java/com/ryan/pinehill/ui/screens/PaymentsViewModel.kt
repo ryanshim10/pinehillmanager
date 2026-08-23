@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -40,6 +41,16 @@ class PaymentsViewModel(application: Application) : AndroidViewModel(application
     val pendingPayments = paymentDao.getPendingPayments()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 
+    private val _historyUnitId = MutableStateFlow<String?>(null)
+    val historyUnitId: StateFlow<String?> = _historyUnitId.asStateFlow()
+
+    val historyPayments = _historyUnitId
+        .flatMapLatest { unitId ->
+            if (unitId.isNullOrBlank()) flowOf(emptyList())
+            else paymentDao.getMatchedPaymentsByUnitSince(unitId, twoYearsAgo())
+        }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
+
     private val _importMessage = MutableStateFlow<String?>(null)
     val importMessage: StateFlow<String?> = _importMessage.asStateFlow()
 
@@ -51,11 +62,15 @@ class PaymentsViewModel(application: Application) : AndroidViewModel(application
         _selectedMonth.value = format.format(calendar.time)
     }
 
+    fun selectHistoryUnit(unitId: String?) {
+        _historyUnitId.value = unitId
+    }
+
     fun importSmsInbox() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val resolver = getApplication<Application>().contentResolver
-                val oneYearAgo = Calendar.getInstance().apply { add(Calendar.YEAR, -1) }.timeInMillis
+                val oneYearAgo = oneYearAgo()
                 val cursor = resolver.query(
                     Telephony.Sms.Inbox.CONTENT_URI,
                     arrayOf(Telephony.Sms._ID, Telephony.Sms.BODY, Telephony.Sms.DATE, Telephony.Sms.ADDRESS),
@@ -64,18 +79,20 @@ class PaymentsViewModel(application: Application) : AndroidViewModel(application
                     "${Telephony.Sms.DATE} DESC"
                 )
 
+                var scanned = 0
+                var kakaoDeposits = 0
                 var imported = 0
-                var recognized = 0
                 cursor?.use { c ->
                     val bodyIndex = c.getColumnIndexOrThrow(Telephony.Sms.BODY)
                     val dateIndex = c.getColumnIndexOrThrow(Telephony.Sms.DATE)
 
                     while (c.moveToNext()) {
+                        scanned++
                         val body = c.getString(bodyIndex) ?: continue
-                        if (!body.contains("입금")) continue
+                        if (!SmsParser.isKakaoBankDeposit(body)) continue
 
                         val parsed = SmsParser.parseDepositSms(body) ?: continue
-                        recognized++
+                        kakaoDeposits++
                         if (paymentDao.countSmsByRawText(body) > 0) continue
 
                         val receivedAt = c.getLong(dateIndex)
@@ -96,12 +113,12 @@ class PaymentsViewModel(application: Application) : AndroidViewModel(application
                         imported++
                     }
                 }
-                _importMessage.value = if (recognized == 0) {
-                    "최근 1년 문자에서 인식 가능한 입금내역을 찾지 못했습니다."
-                } else {
-                    "입금문자 ${recognized}건 확인 · 새로 ${imported}건 추가"
+
+                _importMessage.value = when {
+                    kakaoDeposits == 0 -> "최근 1년 문자 ${scanned}건을 확인했지만 카카오뱅크 입금문자를 찾지 못했습니다."
+                    else -> "최근 1년 카카오뱅크 입금 ${kakaoDeposits}건 확인 · 새로 ${imported}건 추가"
                 }
-            } catch (e: SecurityException) {
+            } catch (_: SecurityException) {
                 _importMessage.value = "문자 읽기 권한이 필요합니다."
             } catch (e: Exception) {
                 _importMessage.value = "문자 불러오기 실패: ${e.message ?: "알 수 없는 오류"}"
@@ -119,6 +136,7 @@ class PaymentsViewModel(application: Application) : AndroidViewModel(application
                 )
             )
             _selectedMonth.value = payment.month
+            _historyUnitId.value = unitId
             _importMessage.value = "${payment.senderName ?: "입금"} ${formatWon(payment.amount)} → ${unitId.removePrefix("PINE-")}호 매칭 완료"
         }
     }
@@ -130,6 +148,14 @@ class PaymentsViewModel(application: Application) : AndroidViewModel(application
     companion object {
         private fun currentMonth(): String =
             SimpleDateFormat("yyyy-MM", Locale.KOREA).format(Date())
+
+        private fun oneYearAgo(): Long = Calendar.getInstance().apply {
+            add(Calendar.YEAR, -1)
+        }.timeInMillis
+
+        private fun twoYearsAgo(): Long = Calendar.getInstance().apply {
+            add(Calendar.YEAR, -2)
+        }.timeInMillis
 
         fun formatWon(amount: Long): String = String.format(Locale.KOREA, "%,d원", amount)
     }
