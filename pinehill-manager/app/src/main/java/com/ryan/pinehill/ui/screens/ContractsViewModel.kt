@@ -6,11 +6,16 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.ryan.pinehill.data.AppDatabase
 import com.ryan.pinehill.data.model.ContractRecord
+import com.ryan.pinehill.data.model.Tenant
 import com.ryan.pinehill.util.ContractDraft
 import com.ryan.pinehill.util.ContractParser
 import com.ryan.pinehill.util.DocumentOcr
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 data class PendingContractDraft(
@@ -22,8 +27,10 @@ data class PendingContractDraft(
 class ContractsViewModel(application: Application) : AndroidViewModel(application) {
     private val db = AppDatabase.getDatabase(application)
 
-    val units = db.unitDao().getAllUnits().stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
-    val contracts = db.contractDao().getAllContracts().stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
+    val units = db.unitDao().getAllUnits()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
+    val contracts = db.contractDao().getAllContracts()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 
     private val _pending = MutableStateFlow<List<PendingContractDraft>>(emptyList())
     val pending: StateFlow<List<PendingContractDraft>> = _pending.asStateFlow()
@@ -62,31 +69,42 @@ class ContractsViewModel(application: Application) : AndroidViewModel(applicatio
         viewModelScope.launch(Dispatchers.IO) {
             _busy.value = true
             val context = getApplication<Application>()
-            val uris = runCatching { DocumentOcr.collectFolderDocuments(context, treeUri) }.getOrDefault(emptyList())
+            val uris = runCatching {
+                DocumentOcr.collectFolderDocuments(context, treeUri)
+            }.getOrDefault(emptyList())
             _busy.value = false
-            if (uris.isEmpty()) _message.value = "폴더에서 PDF/사진 계약서를 찾지 못했습니다."
-            else importDocuments(uris)
+            if (uris.isEmpty()) {
+                _message.value = "폴더에서 PDF/사진 계약서를 찾지 못했습니다."
+            } else {
+                importDocuments(uris)
+            }
         }
     }
 
     fun savePending(pending: PendingContractDraft, record: ContractRecord) {
         viewModelScope.launch(Dispatchers.IO) {
-            db.contractDao().insertContract(record.copy(
+            val saved = record.copy(
                 contractId = 0,
                 documentUri = pending.uri,
                 sourceName = pending.sourceName,
                 rawOcrText = pending.draft.rawText,
                 updatedAt = System.currentTimeMillis()
-            ))
-            _pending.value = _pending.value.filterNot { it.uri == pending.uri && it.sourceName == pending.sourceName }
+            )
+            db.contractDao().insertContract(saved)
+            ensureTenantUnitLink(saved)
+            _pending.value = _pending.value.filterNot {
+                it.uri == pending.uri && it.sourceName == pending.sourceName
+            }
             _message.value = "${record.tenantName} · ${record.unitId.removePrefix("PINE-")}호 계약을 저장했습니다."
         }
     }
 
     fun updateContract(record: ContractRecord) {
         viewModelScope.launch(Dispatchers.IO) {
-            db.contractDao().updateContract(record.copy(updatedAt = System.currentTimeMillis()))
-            _message.value = "계약 내용을 수정했습니다."
+            val updated = record.copy(updatedAt = System.currentTimeMillis())
+            db.contractDao().updateContract(updated)
+            ensureTenantUnitLink(updated)
+            _message.value = "계약 내용을 수정했습니다. 같은 세입자가 여러 호실이면 호실별 관계로 유지됩니다."
         }
     }
 
@@ -97,5 +115,28 @@ class ContractsViewModel(application: Application) : AndroidViewModel(applicatio
         }
     }
 
-    fun clearMessage() { _message.value = null }
+    private suspend fun ensureTenantUnitLink(record: ContractRecord): String {
+        val key = tenantKey(record.tenantName, record.tenantPhone, record.unitId)
+        db.tenantDao().insertTenant(
+            Tenant(
+                tenantKey = key,
+                name = record.tenantName.trim(),
+                phone = record.tenantPhone.trim(),
+                unitId = record.unitId
+            )
+        )
+        return key
+    }
+
+    fun clearMessage() {
+        _message.value = null
+    }
+
+    companion object {
+        fun tenantKey(name: String, phone: String, unitId: String): String {
+            val normalizedName = name.replace(Regex("\\s+"), "").ifBlank { "unknown" }
+            val normalizedPhone = phone.filter(Char::isDigit).ifBlank { "nophone" }
+            return "${normalizedName}_${normalizedPhone}_$unitId"
+        }
+    }
 }
