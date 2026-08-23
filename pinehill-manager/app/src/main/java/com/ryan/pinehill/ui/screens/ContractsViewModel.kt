@@ -61,7 +61,7 @@ class ContractsViewModel(application: Application) : AndroidViewModel(applicatio
                 }.onFailure { failed++ }
             }
             _busy.value = false
-            _message.value = "계약서 OCR $ok건 완료${if (failed > 0) " · 실패 $failed건" else ""}. 내용을 확인 후 저장하세요."
+            _message.value = "계약서 OCR ${ok}건 완료${if (failed > 0) " · 실패 ${failed}건" else ""}. 내용을 확인 후 저장하세요."
         }
     }
 
