@@ -32,13 +32,27 @@ fun MainScreen() {
                     icon = { Text("⌂") },
                     label = { Text("호실") }
                 )
+                NavigationBarItem(
+                    selected = selectedTab == 2,
+                    onClick = { selectedTab = 2 },
+                    icon = { Text("▤") },
+                    label = { Text("계약") }
+                )
+                NavigationBarItem(
+                    selected = selectedTab == 3,
+                    onClick = { selectedTab = 3 },
+                    icon = { Text("MD") },
+                    label = { Text("백업") }
+                )
             }
         }
     ) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
             when (selectedTab) {
                 0 -> PaymentsScreen()
-                else -> UnitsScreen()
+                1 -> UnitsScreen()
+                2 -> ContractsScreen()
+                else -> BackupScreen()
             }
         }
     }
