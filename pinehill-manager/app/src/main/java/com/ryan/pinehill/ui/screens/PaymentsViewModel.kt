@@ -10,6 +10,7 @@ import com.ryan.pinehill.data.model.PaymentMatchRule
 import com.ryan.pinehill.data.model.PaymentSource
 import com.ryan.pinehill.data.model.PaymentStatus
 import com.ryan.pinehill.data.model.Tenant
+import com.ryan.pinehill.util.PaymentMatchSuggester
 import com.ryan.pinehill.util.SmsParser
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -133,9 +134,13 @@ class PaymentsViewModel(application: Application) : AndroidViewModel(application
                 }
 
                 val autoMatched = applyAllRules()
+                val rulesNow = ruleDao.getEnabledRulesNow()
+                val confirmNeeded = paymentDao.getPendingPaymentsNow().count {
+                    PaymentMatchSuggester.sameSenderRules(it, rulesNow).isNotEmpty()
+                }
                 _importMessage.value = when {
                     bankDeposits == 0 -> "최근 1년 문자 ${scanned}건 중 인식 가능한 은행 입금문자가 없습니다."
-                    else -> "은행 입금 ${bankDeposits}건 확인 · 새로 ${imported}건 · 규칙 자동매칭 ${autoMatched}건"
+                    else -> "은행 입금 ${bankDeposits}건 확인 · 새로 ${imported}건 · 자동매칭 ${autoMatched}건 · 확인필요 ${confirmNeeded}건"
                 }
             } catch (_: SecurityException) {
                 _importMessage.value = "문자 읽기 권한이 필요합니다."
@@ -201,9 +206,34 @@ class PaymentsViewModel(application: Application) : AndroidViewModel(application
             ruleDao.insertRule(rule)
 
             val matched = applyRule(rule)
+            val rulesNow = ruleDao.getEnabledRulesNow()
+            val sameSenderPending = paymentDao.getPendingPaymentsNow().count {
+                PaymentMatchSuggester.sameSenderRules(it, rulesNow).any { sameRule ->
+                    sameRule.bankName == bank &&
+                        SmsParser.normalizeName(sameRule.senderName) == sender
+                }
+            }
             _selectedMonth.value = payment.month
             _historyUnitId.value = unitId
-            _importMessage.value = "$bank · ${payment.senderName ?: sender} · ${formatWon(payment.amount)} · ${day}일 → ${unitId.removePrefix("PINE-")}호 규칙 저장, 과거 ${matched}건 일괄 매칭"
+            _importMessage.value = "$bank · ${payment.senderName ?: sender} → ${unitId.removePrefix("PINE-")}호 연결 완료. 정상조건 ${matched}건 자동매칭 · 금액/일자가 다른 ${sameSenderPending}건은 확인만 누르면 됩니다."
+        }
+    }
+
+    fun confirmPaymentToUnit(payment: Payment, unitId: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val day = SmsParser.dayOfMonth(payment.paidAt)
+            val tenantKey = resolveTenantKey(unitId, payment.amount, day)
+            paymentDao.updatePayment(
+                payment.copy(
+                    tenantKey = tenantKey,
+                    unitId = unitId,
+                    status = PaymentStatus.PAID,
+                    statusOverride = true
+                )
+            )
+            _selectedMonth.value = payment.month
+            _historyUnitId.value = unitId
+            _importMessage.value = "${payment.senderName ?: "입금자"} · ${formatWon(payment.amount)} → ${unitId.removePrefix("PINE-")}호 확인 완료. 자동규칙은 변경하지 않았습니다."
         }
     }
 
