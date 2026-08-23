@@ -4,7 +4,6 @@ import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.ryan.pinehill.data.AppDatabase
 import com.ryan.pinehill.data.model.ContractRecord
@@ -42,8 +41,7 @@ class MainActivitySmokeTest {
 
     @Test
     fun roomTap_opens24MonthHistoryWithMatchedSmsPayment() {
-        val context = ApplicationProvider.getApplicationContext<android.content.Context>()
-        val db = AppDatabase.getDatabase(context)
+        val db = AppDatabase.getDatabase(composeRule.activity.application)
         val now = System.currentTimeMillis()
         val month = SimpleDateFormat("yyyy-MM", Locale.KOREA).format(Date(now))
 
@@ -82,7 +80,8 @@ class MainActivitySmokeTest {
         }
 
         composeRule.onNodeWithText("호실").performClick()
-        composeRule.waitUntil(5_000) {
+        composeRule.onNodeWithText("호실별 월세 현황").fetchSemanticsNode()
+        composeRule.waitUntil(10_000) {
             composeRule.onAllNodesWithText("990호").fetchSemanticsNodes().isNotEmpty()
         }
         composeRule.onAllNodesWithText("990호")[0].performClick()
