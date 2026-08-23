@@ -12,6 +12,9 @@ interface PaymentDao {
     @Query("SELECT * FROM payments WHERE month = :month ORDER BY unitId")
     fun getPaymentsByMonth(month: String): Flow<List<Payment>>
 
+    @Query("SELECT * FROM payments ORDER BY paidAt DESC, createdAt DESC")
+    fun getAllPayments(): Flow<List<Payment>>
+
     @Query("SELECT * FROM payments WHERE status = 'PENDING' ORDER BY paidAt DESC, createdAt DESC")
     fun getPendingPayments(): Flow<List<Payment>>
 
