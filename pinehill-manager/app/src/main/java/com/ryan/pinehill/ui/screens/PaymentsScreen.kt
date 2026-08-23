@@ -309,7 +309,7 @@ private fun SmsMatchingPage(
                             modifier = Modifier.fillMaxWidth()
                         ) {
                             Column(Modifier.padding(10.dp)) {
-                                Text("동일 입금자 $sameSenderCount건 불러옴", fontWeight = FontWeight.Bold)
+                                Text("동일 입금자 ${sameSenderCount}건 불러옴", fontWeight = FontWeight.Bold)
                                 Text(
                                     "연결 호실: ${linkedUnitIds.joinToString(", ") { roomLabel(it, units) }}",
                                     style = MaterialTheme.typography.bodySmall
