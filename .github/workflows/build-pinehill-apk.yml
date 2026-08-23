@@ -1,9 +1,6 @@
 name: Build Pinehill APK
 
 on:
-  push:
-    branches:
-      - build/apk-20260822
   workflow_dispatch:
   pull_request:
     branches:
